@@ -44,7 +44,7 @@ This method `getImagePath` allows you to modify the URL path that is generated b
 
 ## Usage
 
-You need a instance of imgproxy running to use this plugin.
+You need an instance of imgproxy running to use this plugin.
 You can run it locally or in a docker container `darthsim/imgproxy`.
 
 You have to enable [remote_thumbnails](https://developer.shopware.com/docs/guides/plugins/plugins/content/media/remote-thumbnail-generation.html)
