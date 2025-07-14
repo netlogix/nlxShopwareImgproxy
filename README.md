@@ -21,7 +21,7 @@ You can configure the plugin over the Shopware plugin configuration or add the f
 | key         | null    | The key for [signing a URL](https://docs.imgproxy.net/latest/usage/signing_url)                 |
 | salt        | null    | The salt for [signing a URL](https://docs.imgproxy.net/latest/usage/signing_url)                |
 
-Only if `enable` is set to `true` and `baseUrl`is defined, the plugin will use imgproxy to generate remote thumbnails.
+Only if `enable` is set to `true` and `baseUrl` is defined, the plugin will use imgproxy to generate remote thumbnails.
 
 Only if key and salt are set, the plugin will sign the URLs.
 
