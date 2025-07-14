@@ -1,40 +1,54 @@
 {
-  "name": "netlogix/nlxshopwareimageproxy",
-  "version": "v1.0.0",
+  "name": "netlogix/nlx-sw-imgproxy",
   "description": "Plugin to allow shopware to authenticate and support image proxy",
-  "type": "shopware-platform-plugin",
   "license": "MIT",
-  "autoload": {
-    "psr-4": {
-      "nlxShopwareImageProxy\\": "src/"
+  "type": "shopware-platform-plugin",
+  "version": "v1.1.0",
+  "authors": [
+    {
+      "name": "netlogix GmbH & Co. KG"
     }
-  },
+  ],
   "require": {
-    "shopware/core": "dev-trunk"
+    "shopware/core": "*"
   },
   "require-dev": {
     "php": ">= 8.3",
-    "phpunit/phpunit": "^12.0",
-    "netlogix/coding-guidelines-php": "^1.0"
+    "ergebnis/composer-normalize": "^2.47",
+    "netlogix/coding-guidelines-php": "^1.0",
+    "phpunit/phpunit": "^12.0"
   },
-  "conflict": {
-    "shopware/core": "<6.7.0"
+  "autoload": {
+    "psr-4": {
+      "Netlogix\\NlxSwImgproxy\\": "src/"
+    }
   },
-  "scripts": {
-    "lint": "ecs check",
-    "lint-fix": "ecs check --fix",
-    "unit": "vendor/bin/phpunit tests/Unit"
-  },
-  "extra": {
-    "shopware-plugin-class": "nlxShopwareImageProxy\\nlxShopwareImageProxy",
-    "label": {
-      "de-DE": "Bilder Proxy Unterstützung",
-      "en-GB": "Image proxy support"
+  "autoload-dev": {
+    "psr-4": {
+      "Netlogix\\NlxSwImgproxy\\Test\\": "tests/"
     }
   },
   "config": {
     "allow-plugins": {
+      "ergebnis/composer-normalize": true,
       "symfony/runtime": true
     }
+  },
+  "extra": {
+    "label": {
+      "de-DE": "imgproxy Unterstützung",
+      "en-GB": "imgproxy support"
+    },
+    "shopware-plugin-class": "Netlogix\\NlxSwImgproxy\\NlxSwImgproxy"
+  },
+  "scripts": {
+    "composer:normalize": "@composer normalize --no-check-lock --dry-run",
+    "composer:normalize:fix": "@composer normalize --no-check-lock",
+    "lint": "ecs check",
+    "lint:fix": "ecs check --fix",
+    "test": [
+      "test:unit"
+    ],
+    "test:unit": "vendor/bin/phpunit tests/Unit"
   }
 }

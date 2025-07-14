@@ -8,10 +8,10 @@ declare(strict_types=1);
  * @copyright netlogix GmbH & Co. KG
  */
 
-namespace nlxShopwareImageProxy;
+namespace Netlogix\NlxSwImgproxy;
 
 use Shopware\Core\Framework\Plugin;
 
-class nlxShopwareImageProxy extends Plugin
+class NlxSwImgproxy extends Plugin
 {
 }

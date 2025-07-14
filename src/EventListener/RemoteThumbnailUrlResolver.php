@@ -8,28 +8,37 @@ declare(strict_types=1);
  * @copyright netlogix GmbH & Co. KG
  */
 
-namespace nlxShopwareImageProxy\Subscriber;
+namespace Netlogix\NlxSwImgproxy\EventListener;
 
-use nlxShopwareImageProxy\DTO\ImageProxyOptionDTO;
-use nlxShopwareImageProxy\Services\UrlGeneratorInterface;
+use Netlogix\NlxSwImgproxy\Service\ConfigService;
+use Netlogix\NlxSwImgproxy\Service\UrlGeneratorInterface;
 use Shopware\Core\Content\Media\Extension\ResolveRemoteThumbnailUrlExtension;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 
+/**
+ * @codeCoverageIgnore
+ */
 #[AsEventListener(ResolveRemoteThumbnailUrlExtension::NAME . '.pre')]
-class RemoteThumbnailUrlExtensionSubscriber
+class RemoteThumbnailUrlResolver
 {
     public function __construct(
         private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly ConfigService $configService,
     ) {
     }
 
     public function __invoke(ResolveRemoteThumbnailUrlExtension $extension): void
     {
+        if (!$this->configService->isEnabled()) {
+            return;
+        }
+
         $extension->stopPropagation();
 
         $extension->result = $this->urlGenerator->generateUrl(
             $extension->mediaPath,
-            new ImageProxyOptionDTO(width: $extension->width, height: $extension->height),
+            $extension->width,
+            $extension->height
         );
     }
 }
