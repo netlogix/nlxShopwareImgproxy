@@ -28,13 +28,13 @@ class ConfigService
     public function isEnabled(?string $salesChannelId = null): bool
     {
         return $this->systemConfigService->getBool($this->getConfigKey('enable'), $salesChannelId)
-            && $this->getBaseUrl($salesChannelId);
+            && $this->getBaseUrl($salesChannelId) !== null;
     }
 
     public function getBaseUrl(?string $salesChannelId = null): ?string
     {
         return $this->systemConfigService->getString($this->getConfigKey('baseUrl'), $salesChannelId)
-            ?? null;
+            ?: null;
     }
 
     public function getImageSource(?string $salesChannelId = null): string
