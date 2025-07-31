@@ -13,6 +13,7 @@ namespace Netlogix\NlxSwImgproxy\EventListener;
 use Netlogix\NlxSwImgproxy\Service\ConfigService;
 use Netlogix\NlxSwImgproxy\Service\UrlGeneratorInterface;
 use Shopware\Core\Content\Media\Extension\ResolveRemoteThumbnailUrlExtension;
+use Shopware\Core\Framework\Feature;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 
 /**
@@ -23,7 +24,7 @@ class RemoteThumbnailUrlResolver
 {
     public function __construct(
         private readonly UrlGeneratorInterface $urlGenerator,
-        private readonly ConfigService $configService,
+        private readonly ConfigService $configService
     ) {
     }
 

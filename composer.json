@@ -3,7 +3,7 @@
   "description": "Plugin to allow shopware to authenticate and support image proxy",
   "license": "MIT",
   "type": "shopware-platform-plugin",
-  "version": "v1.1.0",
+  "version": "1.2.0",
   "authors": [
     {
       "name": "netlogix GmbH & Co. KG"
@@ -16,7 +16,8 @@
     "php": ">= 8.3",
     "ergebnis/composer-normalize": "^2.47",
     "netlogix/coding-guidelines-php": "^1.0",
-    "phpunit/phpunit": "^12.0"
+    "phpunit/phpunit": "^12.0",
+    "rector/rector": "^2.1"
   },
   "autoload": {
     "psr-4": {
@@ -44,11 +45,18 @@
   "scripts": {
     "composer:normalize": "@composer normalize --no-check-lock --dry-run",
     "composer:normalize:fix": "@composer normalize --no-check-lock",
-    "lint": "ecs check",
-    "lint:fix": "ecs check --fix",
-    "test": [
-      "test:unit"
+    "ecs": "ecs check",
+    "ecs:fix": "ecs check --fix",
+    "lint:fix": [
+      "@composer:normalize:fix",
+      "@rector:fix",
+      "@ecs:fix"
     ],
-    "test:unit": "vendor/bin/phpunit tests/Unit"
+    "rector": "vendor/bin/rector process --dry-run",
+    "rector:fix": "vendor/bin/rector process",
+    "test": [
+      "@test:unit"
+    ],
+    "test:unit": "vendor/bin/phpunit --testdox --testsuite unit"
   }
 }

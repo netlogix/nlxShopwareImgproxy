@@ -26,6 +26,7 @@ class UrlGenerator implements UrlGeneratorInterface
         if ($width) {
             $image->width = (int) $width;
         }
+
         if ($height) {
             $image->height = (int) $height;
         }

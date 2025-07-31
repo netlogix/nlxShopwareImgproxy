@@ -33,21 +33,19 @@ class ConfigService
 
     public function getBaseUrl(?string $salesChannelId = null): ?string
     {
-        return $this->systemConfigService->getString($this->getConfigKey('baseUrl'), $salesChannelId)
-            ?: null;
+        return $this->systemConfigService->getString($this->getConfigKey('baseUrl'), $salesChannelId);
     }
 
     public function getImageSource(?string $salesChannelId = null): string
     {
-        return $this->systemConfigService->getString($this->getConfigKey('imageSource'), $salesChannelId)
-            ?? '';
+        return $this->systemConfigService->getString($this->getConfigKey('imageSource'), $salesChannelId);
     }
 
     public function getResizeType(?string $salesChannelId = null): ?ResizeType
     {
         $value = $this->systemConfigService->getString($this->getConfigKey('resizeType'), $salesChannelId);
 
-        return $value ? ResizeType::from($value) : null;
+        return $value !== '' ? ResizeType::from($value) : null;
     }
 
     public function isSecure(?string $salesChannelId = null): bool
@@ -58,18 +56,16 @@ class ConfigService
 
     public function getKey(?string $salesChannelId = null): ?string
     {
-        $key = $this->systemConfigService->getString($this->getConfigKey('key'), $salesChannelId)
-            ?? null;
+        $key = $this->systemConfigService->getString($this->getConfigKey('key'), $salesChannelId);
 
-        return $key ? pack("H*", $key) : $key;
+        return $key !== '' ? pack("H*", $key) : $key;
     }
 
     public function getSalt(?string $salesChannelId = null): ?string
     {
-        $salt = $this->systemConfigService->getString($this->getConfigKey('salt'), $salesChannelId)
-            ?? null;
+        $salt = $this->systemConfigService->getString($this->getConfigKey('salt'), $salesChannelId);
 
-        return $salt ? pack("H*", $salt) : $salt;
+        return $salt !== '' ? pack("H*", $salt) : $salt;
     }
 
     private function getConfigKey(string $key): string
