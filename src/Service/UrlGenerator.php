@@ -60,4 +60,9 @@ class UrlGenerator implements UrlGeneratorInterface
 
         return str_replace(["+", "/", "="], ["-", "_", ""], $sha256Encoded);
     }
+
+    public function supportMimeType(string $type): bool
+    {
+        return str_starts_with($type, 'image/');
+    }
 }

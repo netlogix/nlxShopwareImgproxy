@@ -14,6 +14,7 @@ use Netlogix\NlxSwImgproxy\Service\ConfigService;
 use Netlogix\NlxSwImgproxy\Service\UrlGeneratorInterface;
 use Shopware\Core\Content\Media\Core\Application\AbstractMediaUrlGenerator;
 use Shopware\Core\Content\Media\Core\Params\UrlParams;
+use Shopware\Core\Framework\Feature;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 use Symfony\Component\DependencyInjection\Attribute\AutowireDecorated;
 
@@ -24,7 +25,7 @@ class ImgProxyMediaUrlGenerator extends AbstractMediaUrlGenerator
         #[AutowireDecorated]
         private readonly AbstractMediaUrlGenerator $decorated,
         private readonly UrlGeneratorInterface $urlGenerator,
-        private readonly ConfigService $configService,
+        private readonly ConfigService $configService
     ) {
     }
 
@@ -34,6 +35,31 @@ class ImgProxyMediaUrlGenerator extends AbstractMediaUrlGenerator
             return $this->decorated->generate($paths);
         }
 
-        return array_map(fn (UrlParams $value): string => $this->urlGenerator->generateUrl($value->path), $paths);
+        $images = [];
+        $default = [];
+        if (
+            (Feature::has('v6.8.0.0') && Feature::isActive('v6.8.0.0'))
+            || Feature::isActive('UrlParams_has_mimeType')
+        ) {
+            /** @var UrlParams $path */
+            foreach ($paths as $key => $path) {
+                $mimeType = $path->mimeType ?? '';
+                if ($this->urlGenerator->supportMimeType($mimeType)) {
+                    $images[$key] = $path;
+                } else {
+                    $default[$key] = $path;
+                }
+            }
+        } else {
+            $images = $paths;
+        }
+
+        return [
+            ...($images === [] ? [] : array_map(
+                fn (UrlParams $path): string => $this->urlGenerator->generateUrl($path->path),
+                $images
+            )),
+            ...($default === [] ? [] : $this->decorated->generate($default)),
+        ];
     }
 }
