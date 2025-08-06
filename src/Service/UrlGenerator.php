@@ -26,6 +26,7 @@ class UrlGenerator implements UrlGeneratorInterface
         if ($width) {
             $image->width = (int) $width;
         }
+
         if ($height) {
             $image->height = (int) $height;
         }
@@ -59,5 +60,10 @@ class UrlGenerator implements UrlGeneratorInterface
         $sha256Encoded = base64_encode($sha256);
 
         return str_replace(["+", "/", "="], ["-", "_", ""], $sha256Encoded);
+    }
+
+    public function supportMimeType(string $type): bool
+    {
+        return str_starts_with($type, 'image/');
     }
 }

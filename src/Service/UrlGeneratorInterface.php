@@ -17,4 +17,6 @@ interface UrlGeneratorInterface
     public function generateUrl(string $imagePath, ?string $width = null, ?string $height = null): string;
 
     public function getImagePath(Image $image): string;
+
+    public function supportMimeType(string $type): bool;
 }

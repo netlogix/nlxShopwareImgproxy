@@ -115,7 +115,7 @@ class Image implements Stringable
             $parts[] = 'bg:' . $this->background;
         }
 
-        if ($this->resizeType !== null) {
+        if ($this->resizeType instanceof ResizeType) {
             $parts[] = 'rt:' . $this->resizeType->value;
         }
 
