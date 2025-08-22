@@ -10,8 +10,15 @@ declare(strict_types=1);
 
 namespace Netlogix\NlxSwImgproxy;
 
+use Shopware\Core\Framework\Feature;
 use Shopware\Core\Framework\Plugin;
 
 class NlxSwImgproxy extends Plugin
 {
+    public function boot(): void
+    {
+        parent::boot();
+
+        Feature::registerFeature('UrlParams_has_mimeType');
+    }
 }
