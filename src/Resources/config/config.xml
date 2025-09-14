@@ -21,7 +21,7 @@
             <required>false</required>
             <options>
                 <option>
-                    <id/>
+                    <id>0</id>
                     <name>empty</name>
                 </option>
                 <option>
