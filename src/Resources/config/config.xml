@@ -19,21 +19,32 @@
             <name>resizeType</name>
             <label>Resize type</label>
             <required>false</required>
-            <option>
-                <id/>
-                <name>empty</name>
-                <id>fit</id>
-                <name>fit</name>
-                <id>fill</id>
-                <name>fill</name>
-                <id>fillDown</id>
-                <name>fillDown</name>
-                <id>force</id>
-                <name>force</name>
-                <id>auto</id>
-                <name>auto</name>
-            </option>
-
+            <options>
+                <option>
+                    <id>0</id>
+                    <name>empty</name>
+                </option>
+                <option>
+                    <id>fit</id>
+                    <name>fit</name>
+                </option>
+                <option>
+                    <id>fill</id>
+                    <name>fill</name>
+                </option>
+                <option>
+                    <id>fillDown</id>
+                    <name>fillDown</name>
+                </option>
+                <option>
+                    <id>force</id>
+                    <name>force</name>
+                </option>
+                <option>
+                    <id>auto</id>
+                    <name>auto</name>
+                </option>
+            </options>
         </input-field>
 
         <input-field type="text">
