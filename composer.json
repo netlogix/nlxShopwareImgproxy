@@ -10,7 +10,8 @@
     }
   ],
   "require": {
-    "shopware/core": "*"
+    "shopware/core": "*",
+    "shopware/storefront": "*"
   },
   "require-dev": {
     "php": ">= 8.3",
