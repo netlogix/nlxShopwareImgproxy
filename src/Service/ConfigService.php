@@ -12,6 +12,7 @@ namespace Netlogix\NlxSwImgproxy\Service;
 
 use Netlogix\NlxSwImgproxy\Enum\ResizeType;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * @codeCoverageIgnore
@@ -22,6 +23,7 @@ class ConfigService
 
     public function __construct(
         private readonly SystemConfigService $systemConfigService,
+        #[Autowire(param: 'shopware.media.remote_thumbnails.enable')]
         private readonly bool $remoteThumbnailsEnable = false
     ) {
     }
