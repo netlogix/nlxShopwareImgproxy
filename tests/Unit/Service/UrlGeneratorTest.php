@@ -19,12 +19,14 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Shopware\Core\Framework\Feature;
 
-#[CoversClass(UrlGenerator::class)]#
+#[CoversClass(UrlGenerator::class)]
 #[UsesClass(Image::class)]
 class UrlGeneratorTest extends TestCase
 {
     private UrlGenerator $subject;
+
     private ConfigService&MockObject $configService;
 
     protected function setUp(): void
