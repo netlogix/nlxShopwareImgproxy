@@ -48,7 +48,7 @@ class ConfigService
     {
         $value = $this->systemConfigService->getString($this->getConfigKey('resizeType'), $salesChannelId);
 
-        return $value !== '' ? ResizeType::from($value) : null;
+        return $value !== '' && $value !== '0' ? ResizeType::from($value) : null;
     }
 
     public function isSecure(?string $salesChannelId = null): bool
