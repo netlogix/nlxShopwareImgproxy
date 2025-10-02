@@ -24,7 +24,7 @@ class ConfigService
     public function __construct(
         private readonly SystemConfigService $systemConfigService,
         #[Autowire(param: 'shopware.media.remote_thumbnails.enable')]
-        private readonly bool $remoteThumbnailsEnable = false
+        private readonly bool $remoteThumbnailsEnable
     ) {
     }
 
