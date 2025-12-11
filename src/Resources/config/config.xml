@@ -9,6 +9,12 @@
             <defaultValue>0</defaultValue>
         </input-field>
 
+        <input-field type="bool">
+            <name>enableHtmlPreconnect</name>
+            <label>Enable HTML preconnect</label>
+            <defaultValue>1</defaultValue>
+        </input-field>
+
         <input-field type="url">
             <name>baseUrl</name>
             <label>BaseUrl of the imgproxy</label>
