@@ -82,8 +82,8 @@ class ImgProxyMediaUrlGeneratorTest extends TestCase
     #[DataProvider('SW6Version')]
     public function testGenerate(string $version): void
     {
-        $path1 = new UrlParams('1', UrlParamsSource::MEDIA, 'test/image.jpg');
-        $path2 = new UrlParams('2', UrlParamsSource::MEDIA, 'test/image2.jpg');
+        $path1 = new UrlParams('1', UrlParamsSource::MEDIA, 'test/image.jpg', mimeType: 'image/jpeg');
+        $path2 = new UrlParams('2', UrlParamsSource::MEDIA, 'test/image2.jpg', mimeType: 'image/jpeg');
 
         $paths = [$path1, $path2];
 
@@ -93,8 +93,6 @@ class ImgProxyMediaUrlGeneratorTest extends TestCase
 
         if ($version === 'v6.8') {
             Feature::setActive('UrlParams_has_mimeType', true);
-            $path1->mimeType = 'image/jpeg';
-            $path2->mimeType = 'image/jpeg';
             $this->urlGenerator->expects($this->atLeastOnce())
                 ->method('supportMimeType')
                 ->with('image/jpeg')
@@ -117,8 +115,7 @@ class ImgProxyMediaUrlGeneratorTest extends TestCase
     {
         Feature::setActive('UrlParams_has_mimeType', true);
 
-        $path1 = new UrlParams('1', UrlParamsSource::MEDIA, 'test/image.jpg');
-        $path1->mimeType = 'foo/bar';
+        $path1 = new UrlParams('1', UrlParamsSource::MEDIA, 'test/image.jpg', mimeType: 'foo/bar');
 
         $paths = [$path1];
 
