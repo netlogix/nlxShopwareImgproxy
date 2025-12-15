@@ -16,6 +16,7 @@ use Netlogix\NlxSwImgproxy\Service\UrlGeneratorInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use Shopware\Core\Content\Media\Extension\ResolveRemoteThumbnailUrlExtension;
+use Shopware\Core\Framework\DataAbstractionLayer\PartialEntity;
 use Shopware\Core\Framework\Feature;
 
 #[CoversClass(RemoteThumbnailUrlResolver::class)]
@@ -51,7 +52,8 @@ class  RemoteThumbnailUrlResolverTest extends \PHPUnit\Framework\TestCase
             width: '100',
             height: '100',
             pattern: '{width}x{height}',
-            mediaUpdatedAt: null
+            mediaUpdatedAt: null,
+            mediaEntity: new PartialEntity([])
         );
 
         $this->configService
@@ -76,7 +78,8 @@ class  RemoteThumbnailUrlResolverTest extends \PHPUnit\Framework\TestCase
             width: '100',
             height: '100',
             pattern: '{width}x{height}',
-            mediaUpdatedAt: null
+            mediaUpdatedAt: null,
+            mediaEntity: new PartialEntity([])
         );
 
         $this->configService
