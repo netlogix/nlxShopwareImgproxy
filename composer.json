@@ -3,7 +3,7 @@
   "description": "Plugin to allow shopware to authenticate and support image proxy",
   "license": "MIT",
   "type": "shopware-platform-plugin",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "authors": [
     {
       "name": "netlogix GmbH & Co. KG"
