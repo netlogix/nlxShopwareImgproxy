@@ -1,0 +1,74 @@
+name: Sync release artifacts to develop
+
+on:
+  workflow_run:
+    workflows: ["Create release"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync-to-develop:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GH_AUTOMATION_TOKEN }}
+
+    steps:
+      - name: Checkout (full history)
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Fetch branches (heads only, no tags; avoid ambiguous refs)
+        run: |
+          set -euo pipefail
+
+          echo "Fetching main and develop branches..."
+          git fetch --no-tags --prune origin \
+            +refs/heads/main:refs/remotes/origin/main \
+            +refs/heads/develop:refs/remotes/origin/develop
+
+      - name: Sync composer.json & CHANGELOG.md from main to develop
+        id: sync
+        run: |
+          set -euo pipefail
+          
+          echo "Configuring git user for pushing changes..."
+          git config user.email "websolutions@netlogix.de"
+          git config user.name "netlogix bot"
+          
+          # Prüfe, ob sich genau diese Dateien zwischen main und develop unterscheiden
+          echo "Checking for differences in composer.json and CHANGELOG.md between main and develop..."
+          if git diff --quiet \
+           refs/remotes/origin/develop..refs/remotes/origin/main \
+           -- composer.json CHANGELOG.md; then
+          echo "nothing_to_sync=true" >> "$GITHUB_OUTPUT"
+          exit 0
+          fi
+          
+          # Wechsle auf lokalen develop, der auf remote/develop basiert
+          echo "Checking out develop branch..."
+          git checkout -B develop refs/remotes/origin/develop
+          
+          # Übernehme die zwei Dateien exakt aus main
+          echo "Checking out composer.json and CHANGELOG.md from main branch..."
+          git checkout refs/remotes/origin/main -- composer.json CHANGELOG.md
+          
+          # Stage & Commit mit [skip ci], damit keine Workflows feuern
+          echo "Committing changes..."
+          git add composer.json CHANGELOG.md
+          git commit -m "[release-sync] chore: sync composer.json & CHANGELOG.md from main to develop [skip ci]" || {
+            echo "nothing_to_sync=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          }
+          
+          echo "Pushing changes to develop branch..."
+          git push origin HEAD:develop
+          echo "nothing_to_sync=false" >> "$GITHUB_OUTPUT"
+
+      - name: Done
+        if: steps.sync.outputs.nothing_to_sync == 'true'
+        run: echo "Nichts zu syncen (composer.json/CHANGELOG.md identisch)."
