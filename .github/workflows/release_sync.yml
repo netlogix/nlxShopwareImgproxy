@@ -4,23 +4,29 @@ on:
   workflow_run:
     workflows: ["Create release"]
     types: [completed]
-  workflow_dispatch:
 
 permissions:
   contents: write
+
+# Cannot use overall env because then the sync fails with the wrong user
 
 jobs:
   sync-to-develop:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
-    env:
-      GH_TOKEN: ${{ secrets.GH_AUTOMATION_TOKEN }}
 
     steps:
       - name: Checkout (full history)
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          token: ${{ secrets.GH_AUTOMATION_TOKEN }}
+
+      - name: Configure git & auth
+        run: |
+          git config user.name  "${GIT_AUTHOR_NAME}"
+          git config user.email "${GIT_AUTHOR_EMAIL}"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"
 
       - name: Fetch branches (heads only, no tags; avoid ambiguous refs)
         run: |
@@ -38,7 +44,7 @@ jobs:
           
           echo "Configuring git user for pushing changes..."
           git config user.email "websolutions@netlogix.de"
-          git config user.name "netlogix bot"
+          git config user.name "netlogix-bot"
           
           # Prüfe, ob sich genau diese Dateien zwischen main und develop unterscheiden
           echo "Checking for differences in composer.json and CHANGELOG.md between main and develop..."
@@ -68,6 +74,9 @@ jobs:
           echo "Pushing changes to develop branch..."
           git push origin HEAD:develop
           echo "nothing_to_sync=false" >> "$GITHUB_OUTPUT"
+          echo "done"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_AUTOMATION_TOKEN }}
 
       - name: Done
         if: steps.sync.outputs.nothing_to_sync == 'true'
