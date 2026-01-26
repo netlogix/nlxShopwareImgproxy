@@ -1,0 +1,125 @@
+name: Guard composer.json version
+
+on:
+  pull_request:
+    branches: [develop]
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GH_AUTOMATION_TOKEN }}
+
+jobs:
+  no-manual-version-bump:
+    name: Disallow manual composer.json version bumps
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write   # zum Kommentieren/Löschen
+      issues: write          # PR-Kommentare sind Issue-Kommentare
+
+    env:
+      GH_TOKEN: ${{ github.token }}   # gh CLI Auth
+      REPO: ${{ github.repository }}
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+      BASE_REF: ${{ github.base_ref }}
+
+    steps:
+      - name: Checkout (current PR head)
+        uses: actions/checkout@v6
+
+      - name: Ensure jq and gh are available
+        run: |
+          jq --version
+          gh --version
+
+      - name: Compare composer.json version via jq
+        id: check
+        run: |
+          set -euo pipefail
+
+          # composer.json im Base-Branch RAW abrufen (stabiler als Git-Fetch)
+          base_json="$(gh api -H 'Accept: application/vnd.github.raw' \
+            repos/${REPO}/contents/composer.json?ref=${BASE_REF} || true)"
+
+          # Falls composer.json im Base nicht existiert (Mono-Repos, Erst-Add etc.)
+          if [ -z "${base_json}" ]; then
+            base_ver=""
+          else
+            base_ver="$(printf '%s' "${base_json}" | jq -r '.version // empty')"
+          fi
+
+          # Head-Version aus dem Arbeitsverzeichnis
+          head_ver="$(jq -r '.version // empty' composer.json)"
+
+          echo "Base version: ${base_ver}"
+          echo "Head version: ${head_ver}"
+
+          if [ "${base_ver}" != "${head_ver}" ]; then
+            echo "has_version_change=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_version_change=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Upsert PR comment if version changed
+        if: steps.check.outputs.has_version_change == 'true'
+        run: |
+          set -euo pipefail
+          MARK="<!-- composer-version-guard -->"
+
+          # Prüfen, ob schon ein Kommentar mit unserem Marker existiert
+          existing_ids=$(gh api --paginate \
+            repos/${REPO}/issues/${PR_NUMBER}/comments \
+            --jq "[ .[] | select( (.body // \"\") | contains(\"${MARK}\") ) | .id ] | .[]" || true)
+
+          # Kommentar-Text vorbereiten (mit Marker, damit wir ihn später sicher finden/löschen)
+          cat > /tmp/comment.md <<'EOF'
+            <!-- composer-version-guard -->
+            ⚠️ **Bitte die `version` in `composer.json` nicht manuell ändern.**
+          
+            Releases werden automatisch erstellt (.github/workflows/release.yml).
+            Dieser PR ändert die Eigenschaft `version` – bitte die Änderung zurücknehmen. 
+            Sobald die Version wieder unverändert ist, wird dieser Hinweis automatisch entfernt.
+          EOF
+          
+          if [ -z "${existing_ids}" ]; then
+          # Neuen Kommentar erstellen
+          gh pr comment "${PR_NUMBER}" --body-file /tmp/comment.md
+          else
+          # Optional: vorhandene(n) Kommentar auf den aktuellen Text setzen (idempotent)
+          for id in ${existing_ids}; do
+          gh api \
+          --method PATCH \
+            "repos/${REPO}/issues/comments/${id}" \
+            -f body="@/tmp/comment.md"
+            done
+            fi
+
+      - name: Remove previous PR comments when resolved
+        if: steps.check.outputs.has_version_change != 'true'
+        run: |
+          set -euo pipefail
+          MARK="<!-- composer-version-guard -->"
+          
+          # Alle Kommentare mit unserem Marker einsammeln
+          ids=$(gh api --paginate \
+            repos/${REPO}/issues/${PR_NUMBER}/comments \
+            --jq "[ .[] | select( (.body // \"\") | contains(\"${MARK}\") ) | .id ] | .[]" || true)
+          
+          if [ -n "${ids}" ]; then
+            echo "Removing ${ids}..."
+            for id in ${ids}; do
+              gh api -X DELETE "repos/${REPO}/issues/comments/${id}" || true
+            done
+          else
+            echo "No previous guard comments to remove."
+          fi
+
+      - name: Fail the job if version changed
+        if: steps.check.outputs.has_version_change == 'true'
+        run: |
+          echo "::error::composer.json enthält eine Änderung an \"version\". Releases erfolgen automatisch – bitte diese Änderung entfernen."
+          exit 1
+
+      - name: Success
+        if: steps.check.outputs.has_version_change != 'true'
+        run: |
+          echo "OK: Keine manuelle Änderung an composer.json:version."
