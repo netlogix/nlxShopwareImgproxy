@@ -25,13 +25,13 @@ class ImgProxyMediaUrlGenerator extends AbstractMediaUrlGenerator
         #[AutowireDecorated]
         private readonly AbstractMediaUrlGenerator $decorated,
         private readonly UrlGeneratorInterface $urlGenerator,
-        private readonly ConfigService $configService
+        private readonly ConfigService $configService,
     ) {
     }
 
-    public function generate(array $paths): array
+    public function generate(array $paths, bool $passthrough = false): array
     {
-        if (!$this->configService->isEnabled()) {
+        if (!$this->configService->isEnabled() || $passthrough) {
             return $this->decorated->generate($paths);
         }
 
