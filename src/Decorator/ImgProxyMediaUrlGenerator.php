@@ -21,17 +21,18 @@ use Symfony\Component\DependencyInjection\Attribute\AutowireDecorated;
 #[AsDecorator(decorates: AbstractMediaUrlGenerator::class)]
 class ImgProxyMediaUrlGenerator extends AbstractMediaUrlGenerator
 {
+    private static bool $bypass = false;
+
     public function __construct(
         #[AutowireDecorated]
         private readonly AbstractMediaUrlGenerator $decorated,
-        private readonly UrlGeneratorInterface $urlGenerator,
-        private readonly ConfigService $configService,
-    ) {
-    }
+        private readonly UrlGeneratorInterface     $urlGenerator,
+        private readonly ConfigService             $configService,
+    ) { }
 
-    public function generate(array $paths, bool $passthrough = false): array
+    public function generate(array $paths): array
     {
-        if (!$this->configService->isEnabled() || $passthrough) {
+        if (!$this->configService->isEnabled() || self::$bypass) {
             return $this->decorated->generate($paths);
         }
 
@@ -61,5 +62,12 @@ class ImgProxyMediaUrlGenerator extends AbstractMediaUrlGenerator
             )),
             ...($default === [] ? [] : $this->decorated->generate($default)),
         ];
+    }
+
+    static function bypass(callable $callable): void
+    {
+        self::$bypass = true;
+        $callable();
+        self::$bypass = false;
     }
 }
