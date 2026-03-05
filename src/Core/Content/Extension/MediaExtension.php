@@ -2,9 +2,8 @@
 
 namespace Netlogix\NlxSwImgproxy\Core\Content\Extension;
 
-use Netlogix\NlxSwImgproxy\Core\Content\Definition\OriginalMediaDefinition;
-use nlxEoCustomSorting\Core\Content\Definition\SortingNumberDefinition;
 use Shopware\Core\Content\Media\MediaDefinition;
+use Shopware\Core\Framework\Api\Context\AdminApiSource;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityExtension;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\ApiAware;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\Runtime;
@@ -19,7 +18,7 @@ class MediaExtension extends EntityExtension
     {
         $collection->add(
             (new JsonField('original_media', 'originalMedia'))
-                ->addFlags(new Runtime(), new ApiAware())
+                ->addFlags(new Runtime(), new ApiAware(AdminApiSource::class))
         );
     }
 
