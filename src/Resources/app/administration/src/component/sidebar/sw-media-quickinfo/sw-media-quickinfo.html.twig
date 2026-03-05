@@ -5,7 +5,7 @@
         class="sw-media-sidebar__quickaction quickaction--download"
     >
         <sw-external-link
-            :href="item.extensions.originalMedia.originalUrl ? item.extensions.originalMedia.originalUrl : item.url"
+            :href="item.extensions.originalMedia.originalUrl ?? item.url"
             download
         >
 
