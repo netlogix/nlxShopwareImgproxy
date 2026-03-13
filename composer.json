@@ -18,7 +18,8 @@
     "ergebnis/composer-normalize": "^2.47",
     "netlogix/coding-guidelines-php": "^1.0",
     "phpunit/phpunit": "^12.0",
-    "rector/rector": "^2.1"
+    "rector/rector": "^2.1",
+    "shopwarelabs/phpstan-shopware": "^0.1.14"
   },
   "autoload": {
     "psr-4": {

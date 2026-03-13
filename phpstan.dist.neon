@@ -1,0 +1,2 @@
+includes:
+    - vendor/shopwarelabs/phpstan-shopware/rules.neon

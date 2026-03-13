@@ -40,7 +40,6 @@ class RemoteThumbnailUrlResolver
             (Feature::has('v6.8.0.0') && Feature::isActive('v6.8.0.0'))
             || Feature::isActive('UrlParams_has_mimeType')
         ) {
-
             $mimeType = $extension->mediaEntity?->get('mimeType') ?? '';
 
             if (!$this->urlGenerator->supportMimeType($mimeType)) {
@@ -52,6 +51,5 @@ class RemoteThumbnailUrlResolver
             $extension->width,
             $extension->height
         );
-
     }
 }
