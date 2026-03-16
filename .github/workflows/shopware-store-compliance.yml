@@ -28,7 +28,7 @@ jobs:
 
       - name: 'Install Composer Dependencies'
         shell: bash
-        run: composer install --no-dev --prefer-dist --no-progress --no-interaction --optimize-autoloader
+        run: composer install --prefer-dist --no-progress --no-interaction --optimize-autoloader
 
       - name: Run Shopware extension verifier
         uses: shopware/github-actions/extension-verifier@main
