@@ -1,0 +1,23 @@
+name: Shopware Store Compliance
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  extension-verifier:
+    name: Extension Verifier
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Run Shopware extension verifier
+        uses: shopware/github-actions/extension-verifier@main
