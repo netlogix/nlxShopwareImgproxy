@@ -26,9 +26,10 @@ class ImgProxyMediaUrlGenerator extends AbstractMediaUrlGenerator
     public function __construct(
         #[AutowireDecorated]
         private readonly AbstractMediaUrlGenerator $decorated,
-        private readonly UrlGeneratorInterface     $urlGenerator,
-        private readonly ConfigService             $configService,
-    ) { }
+        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly ConfigService $configService,
+    ) {
+    }
 
     public function generate(array $paths): array
     {
