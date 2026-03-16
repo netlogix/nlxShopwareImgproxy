@@ -30,5 +30,16 @@ jobs:
         shell: bash
         run: composer install --prefer-dist --no-progress --no-interaction --optimize-autoloader
 
-      - name: Run Shopware extension verifier
-        uses: shopware/github-actions/extension-verifier@main
+      # inspired by https://github.com/shopware/github-actions/blob/main/extension-verifier/action.yml
+      - name: Install Shopware-CLI
+        uses: shopware/shopware-cli-action@v1
+
+      - name: Run verifier
+        if: inputs.action == 'check'
+        shell: bash
+        run: shopware-cli extension validate --store-compliance .
+
+      - name: Run formatter
+        if: inputs.action == 'format'
+        shell: bash
+        run: shopware-cli extension format . --dry-run
