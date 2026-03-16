@@ -64,7 +64,7 @@ class ImgProxyMediaUrlGenerator extends AbstractMediaUrlGenerator
         ];
     }
 
-    static function bypass(callable $callable): void
+    public static function bypass(callable $callable): void
     {
         self::$bypass = true;
         $callable();

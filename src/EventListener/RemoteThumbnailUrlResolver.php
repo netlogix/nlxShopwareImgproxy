@@ -46,6 +46,7 @@ class RemoteThumbnailUrlResolver
                 return;
             }
         }
+
         $extension->result = $this->urlGenerator->generateUrl(
             $extension->mediaPath,
             $extension->width,
