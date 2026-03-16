@@ -1,0 +1,32 @@
+name: Run phpstan
+
+on:
+  pull_request:
+    types: [ opened, synchronize ]
+    branches:
+      - develop
+
+jobs:
+  phpstan:
+    name: 'Run phpstan in ${{ matrix.working-directory }}'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 'Checkout code'
+        uses: actions/checkout@v6
+
+      - name: 'Setup PHP'
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: composer
+          coverage: 'xdebug3'
+
+      - name: 'Install Composer Dependencies'
+        shell: bash
+        run: composer install --prefer-dist --no-progress --no-interaction --optimize-autoloader
+
+      - name: 'Run phpstan'
+        shell: bash
+        continue-on-error: false
+        run: vendor/bin/phpstan --memory-limit=-1 --error-format=github
