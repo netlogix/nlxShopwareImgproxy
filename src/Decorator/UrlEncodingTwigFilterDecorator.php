@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Netlogix\NlxSwImgproxy\Decorator;
 
 use Netlogix\NlxSwImgproxy\Service\ConfigService;
