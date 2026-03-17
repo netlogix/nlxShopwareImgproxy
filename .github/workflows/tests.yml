@@ -51,4 +51,4 @@ jobs:
       - name: 'Run Unit Tests'
         working-directory: custom/plugins/${{ github.event.repository.name }}
         shell: bash
-        run: ../../../vendor/bin/phpunit --testdox --testsuite unit composer -d custom/plugins/${{ github.event.repository.name }} run test:unit
+        run: ../../../vendor/bin/phpunit --testdox --testsuite unit
