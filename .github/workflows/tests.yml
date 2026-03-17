@@ -26,6 +26,13 @@ jobs:
         with:
           path: custom/plugins/${{ github.event.repository.name }}
 
+      - name: 'Allow insecure packages for fixed Shopware versions'
+        if: matrix.shopware-version != 'trunk'
+        shell: bash
+        run: |
+          mkdir -p ~/.config/composer
+          printf '%s\n' '{"config":{"audit":{"block-insecure":false}}}' > ~/.config/composer/config.json
+
       - name: 'Setup Shopware and Extension'
         uses: shopware/github-actions/setup-extension@main
         with:
@@ -42,7 +49,6 @@ jobs:
         run: composer validate
 
       - name: 'Run Unit Tests'
-        if: matrix.task == 'unit'
         working-directory: custom/plugins/${{ github.event.repository.name }}
         shell: bash
         run: composer test:unit
