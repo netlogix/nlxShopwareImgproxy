@@ -42,6 +42,8 @@ jobs:
         run: composer require --dev shopwarelabs/phpstan-shopware
 
       - name: 'Run phpstan'
+        working-directory: custom/plugins/${{ github.event.repository.name }}
         shell: bash
-        run: composer -d custom/plugins/${{ github.event.repository.name }} run phpstan
-
+        run: |
+          cp phpstan.neon.dist ../../../
+          ../../../vendor/bin/phpstan
