@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Netlogix\NlxSwImgproxy\Tests\Unit\Decorator;
 
+use Composer\InstalledVersions;
 use Netlogix\NlxSwImgproxy\Decorator\ImgProxyMediaUrlGenerator;
 use Netlogix\NlxSwImgproxy\Service\ConfigService;
 use Netlogix\NlxSwImgproxy\Service\UrlGeneratorInterface;
@@ -71,22 +72,32 @@ class ImgProxyMediaUrlGeneratorTest extends TestCase
         self::assertSame(['url1', 'url2'], $result);
     }
 
-    public static function SW6Version(): array
+    public static function SW6Version(): iterable
     {
-        return [
-            'v6.8' => ['v6.8'],
-            'v6.7' => ['v6.7'],
+        $shopwareVersion = InstalledVersions::getPrettyVersion('shopware/core') ?? '0.0.0';
+
+        yield 'v6.7' => [
+            'version' => 'v6.7',
+            'paths' => [
+                new UrlParams('1', UrlParamsSource::MEDIA, 'test/image.jpg'),
+                new UrlParams('2', UrlParamsSource::MEDIA, 'test/image2.jpg'),
+            ],
         ];
+
+        if (version_compare($shopwareVersion, '6.8.0.0', '>=')) {
+            yield 'v6.8' => [
+                'version' => 'v6.8',
+                'paths' => [
+                    new UrlParams('1', UrlParamsSource::MEDIA, 'test/image.jpg', mimeType: 'image/jpeg'),
+                    new UrlParams('2', UrlParamsSource::MEDIA, 'test/image2.jpg', mimeType: 'image/jpeg'),
+                ],
+            ];
+        }
     }
 
     #[DataProvider('SW6Version')]
-    public function testGenerate(string $version): void
+    public function testGenerate(string $version, array $paths): void
     {
-        $path1 = new UrlParams('1', UrlParamsSource::MEDIA, 'test/image.jpg', mimeType: 'image/jpeg');
-        $path2 = new UrlParams('2', UrlParamsSource::MEDIA, 'test/image2.jpg', mimeType: 'image/jpeg');
-
-        $paths = [$path1, $path2];
-
         $this->configService->method('isEnabled')->willReturn(true);
         $this->decorated->expects($this->never())
             ->method('generate');
@@ -102,8 +113,8 @@ class ImgProxyMediaUrlGeneratorTest extends TestCase
         $this->urlGenerator->expects($this->atLeastOnce())
             ->method('generateUrl')
             ->willReturnCallback(fn ($path): string => match ($path) {
-                $path1->path => 'imgproxyUrl1',
-                $path2->path => 'imgproxyUrl2',
+                $paths[0]->path => 'imgproxyUrl1',
+                $paths[1]->path => 'imgproxyUrl2',
             });
 
         $result = $this->subject->generate($paths);
@@ -113,6 +124,12 @@ class ImgProxyMediaUrlGeneratorTest extends TestCase
 
     public function testGenerateSkip(): void
     {
+        $shopwareVersion = InstalledVersions::getPrettyVersion('shopware/core') ?? '0.0.0';
+
+        if (version_compare($shopwareVersion, '6.8.0.0', '<')) {
+            $this->markTestSkipped('This test is only relevant for Shopware versions < 6.8.9');
+        }
+
         Feature::setActive('UrlParams_has_mimeType', true);
 
         $path1 = new UrlParams('1', UrlParamsSource::MEDIA, 'test/image.jpg', mimeType: 'foo/bar');

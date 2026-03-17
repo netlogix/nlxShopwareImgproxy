@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Netlogix\NlxSwImgproxy\Tests\Unit\EventListener;
 
+use Composer\InstalledVersions;
 use Netlogix\NlxSwImgproxy\EventListener\RemoteThumbnailUrlResolver;
 use Netlogix\NlxSwImgproxy\Service\ConfigService;
 use Netlogix\NlxSwImgproxy\Service\UrlGeneratorInterface;
@@ -46,15 +47,7 @@ class  RemoteThumbnailUrlResolverTest extends \PHPUnit\Framework\TestCase
 
     public function testIfDisabled(): void
     {
-        $event = new ResolveRemoteThumbnailUrlExtension(
-            mediaUrl: 'http://example.com/test/image.jpg',
-            mediaPath: 'test/image.jpg',
-            width: '100',
-            height: '100',
-            pattern: '{width}x{height}',
-            mediaUpdatedAt: null,
-            mediaEntity: new PartialEntity([])
-        );
+        $event = $this->createEvent();
 
         $this->configService
             ->expects(self::once())
@@ -72,15 +65,7 @@ class  RemoteThumbnailUrlResolverTest extends \PHPUnit\Framework\TestCase
 
     function testEvent()
     {
-        $event = new ResolveRemoteThumbnailUrlExtension(
-            mediaUrl: 'http://example.com/test/image.jpg',
-            mediaPath: 'test/image.jpg',
-            width: '100',
-            height: '100',
-            pattern: '{width}x{height}',
-            mediaUpdatedAt: null,
-            mediaEntity: new PartialEntity([])
-        );
+        $event = $this->createEvent();
 
         $this->configService
             ->expects(self::once())
@@ -100,5 +85,27 @@ class  RemoteThumbnailUrlResolverTest extends \PHPUnit\Framework\TestCase
         $this->subject->__invoke($event);
 
         self::assertEquals('http://example.com/test/image.jpg', $event->result);
+    }
+
+    private function createEvent(): ResolveRemoteThumbnailUrlExtension
+    {
+        $shopwareVersion = InstalledVersions::getPrettyVersion('shopware/core') ?? '0.0.0';
+
+        return version_compare($shopwareVersion, '6.7.3.0', '>=') ? new ResolveRemoteThumbnailUrlExtension(
+            mediaUrl: 'http://example.com/test/image.jpg',
+            mediaPath: 'test/image.jpg',
+            width: '100',
+            height: '100',
+            pattern: '{width}x{height}',
+            mediaUpdatedAt: null,
+            mediaEntity: new PartialEntity([])
+        ) : new ResolveRemoteThumbnailUrlExtension(
+            mediaUrl: 'http://example.com/test/image.jpg',
+            mediaPath: 'test/image.jpg',
+            width: '100',
+            height: '100',
+            pattern: '{width}x{height}',
+            mediaUpdatedAt: null,
+        );
     }
 }
