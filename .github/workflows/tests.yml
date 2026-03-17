@@ -11,31 +11,38 @@ on:
       - develop
 
 jobs:
-  build-platform:
-    name: 'Test'
+  phpunit:
+    name: '${{ matrix.task }} | PHP ${{ matrix.php-version }} | Shopware ${{ matrix.shopware-version }}'
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ['8.3', '8.4', '8.5']
+        shopware-version: ['v6.7.1.0', 'trunk']
 
     steps:
       - name: 'Checkout Code'
-        uses: actions/checkout@v4
-
-      - name: 'Setup PHP'
-        uses: shivammathur/setup-php@v2
+        uses: actions/checkout@v6
         with:
-          php-version: '8.3'
-          tools: composer
-          coverage: 'xdebug3'
+          path: custom/plugins/${{ github.event.repository.name }}
+
+      - name: 'Setup Shopware and Extension'
+        uses: shopware/github-actions/setup-extension@main
+        with:
+          extensionName: ${{ github.event.repository.name }}
+          phpVersion: ${{ matrix.php-version }}
+          shopwareVersion: ${{ matrix.shopware-version }}
+          install: true
+          env: test
+          keep-composer-tools: true
 
       - name: 'Validate composer.json and composer.lock'
+        working-directory: custom/plugins/${{ github.event.repository.name }}
         shell: bash
         run: composer validate
 
-      - name: 'Install Composer Dependencies'
-        shell: bash
-        run: composer install --prefer-dist --no-progress --no-interaction --optimize-autoloader
-
       - name: 'Run Unit Tests'
+        if: matrix.task == 'unit'
+        working-directory: custom/plugins/${{ github.event.repository.name }}
         shell: bash
-        env:
-          XDEBUG_MODE: 'coverage'
-        run: vendor/bin/phpunit tests/Unit
+        run: composer test:unit
