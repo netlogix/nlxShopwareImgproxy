@@ -84,7 +84,7 @@ class ImgProxyMediaUrlGeneratorTest extends TestCase
             ],
         ];
 
-        if (version_compare($shopwareVersion, '6.8.0.0', '>=')) {
+        if (version_compare($shopwareVersion, 'v6.8.0.0', '>=')) {
             yield 'v6.8' => [
                 'version' => 'v6.8',
                 'paths' => [
