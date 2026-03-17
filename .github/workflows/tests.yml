@@ -26,13 +26,6 @@ jobs:
         with:
           path: custom/plugins/${{ github.event.repository.name }}
 
-      - name: 'Allow insecure packages for fixed Shopware versions'
-        if: matrix.shopwareVersion != 'trunk'
-        shell: bash
-        run: |
-          mkdir -p ~/.config/composer
-          printf '%s\n' '{"config":{"audit":{"block-insecure":false}}}' > ~/.config/composer/config.json
-
       - name: 'Setup Shopware and Extension'
         uses: shopware/github-actions/setup-extension@main
         with:
@@ -42,6 +35,7 @@ jobs:
           install: true
           env: test
           keep-composer-tools: true
+          allow-insecure-versions: true
 
       - name: 'Validate composer.json and composer.lock'
         working-directory: custom/plugins/${{ github.event.repository.name }}
