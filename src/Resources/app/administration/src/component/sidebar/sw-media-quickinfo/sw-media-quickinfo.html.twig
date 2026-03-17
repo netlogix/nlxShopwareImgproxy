@@ -1,20 +1,18 @@
-
 {% block sw_media_quickinfo_quickactions_download %}
-    <li
-        v-if="item.hasFile"
-        class="sw-media-sidebar__quickaction quickaction--download"
+<li
+    v-if="item.hasFile"
+    class="sw-media-sidebar__quickaction quickaction--download"
+>
+    <sw-external-link
+        :href="item.extensions.originalMedia.originalUrl ?? item.url"
+        download
     >
-        <sw-external-link
-            :href="item.extensions.originalMedia.originalUrl ?? item.url"
-            download
-        >
-
-            <sw-icon
-                small
-                name="regular-cloud-download"
-                class="sw-media-sidebar__quickactions-icon"
-            />
-            {{ $tc('sw-media.sidebar.actions.download') }}
-        </sw-external-link>
-    </li>
+        <sw-icon
+            small
+            name="regular-cloud-download"
+            class="sw-media-sidebar__quickactions-icon"
+        />
+        {{ $tc('sw-media.sidebar.actions.download') }}
+    </sw-external-link>
+</li>
 {% endblock %}

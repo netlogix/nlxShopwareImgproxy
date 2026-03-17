@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Netlogix\NlxSwImgproxy\Core\Content\Extension;
 
 use Shopware\Core\Content\Media\MediaDefinition;

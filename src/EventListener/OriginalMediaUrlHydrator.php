@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Netlogix\NlxSwImgproxy\EventListener;
 
-use Netlogix\NlxSwImgproxy\Core\Content\Entity\OriginalMediaEntity;
 use Netlogix\NlxSwImgproxy\Decorator\ImgProxyMediaUrlGenerator;
 use Shopware\Core\Content\Media\Core\Application\AbstractMediaUrlGenerator;
 use Shopware\Core\Content\Media\Core\Params\UrlParams;
@@ -22,7 +23,7 @@ readonly class OriginalMediaUrlHydrator
     public function __invoke(EntityLoadedEvent $event): void
     {
         ImgProxyMediaUrlGenerator::bypass(
-            function () use ($event) {
+            function () use ($event): void {
                 /** @var MediaEntity $mediaEntity */
                 foreach ($event->getEntities() as $mediaEntity) {
                     $url = '';
