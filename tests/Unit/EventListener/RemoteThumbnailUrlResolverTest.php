@@ -89,8 +89,13 @@ class  RemoteThumbnailUrlResolverTest extends \PHPUnit\Framework\TestCase
 
     private function createEvent(): ResolveRemoteThumbnailUrlExtension
     {
-        $shopwareVersion = InstalledVersions::getPrettyVersion('shopware/core') ?? '0.0.0';
-        dd($shopwareVersion, version_compare($shopwareVersion, 'v6.7.3.0', '>='));
+        if (InstalledVersions::isInstalled('shopware/platform')) {
+            $shopwareVersion = InstalledVersions::getPrettyVersion('shopware/platform');
+        } else {
+            $shopwareVersion = InstalledVersions::getPrettyVersion('shopware/core');
+        }
+
+        dd(InstalledVersions::isInstalled('shopware/platform'), $shopwareVersion, version_compare($shopwareVersion, 'v6.7.3.0', '>='));
         return version_compare($shopwareVersion, 'v6.7.3.0', '>=') ? new ResolveRemoteThumbnailUrlExtension(
             mediaUrl: 'http://example.com/test/image.jpg',
             mediaPath: 'test/image.jpg',
