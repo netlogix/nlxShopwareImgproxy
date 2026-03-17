@@ -10,18 +10,19 @@ declare(strict_types=1);
 
 namespace Netlogix\NlxSwImgproxy\Tests\Unit\EventListener;
 
-use Composer\InstalledVersions;
 use Netlogix\NlxSwImgproxy\EventListener\RemoteThumbnailUrlResolver;
 use Netlogix\NlxSwImgproxy\Service\ConfigService;
 use Netlogix\NlxSwImgproxy\Service\UrlGeneratorInterface;
+use Netlogix\NlxSwImgproxy\Test\Helper\ShopwareVersionHelper;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use Shopware\Core\Content\Media\Extension\ResolveRemoteThumbnailUrlExtension;
 use Shopware\Core\Framework\DataAbstractionLayer\PartialEntity;
 use Shopware\Core\Framework\Feature;
 
 #[CoversClass(RemoteThumbnailUrlResolver::class)]
-class  RemoteThumbnailUrlResolverTest extends \PHPUnit\Framework\TestCase
+class  RemoteThumbnailUrlResolverTest extends TestCase
 {
     private RemoteThumbnailUrlResolver $subject;
     private UrlGeneratorInterface&MockObject $urlGenerator;
@@ -89,14 +90,7 @@ class  RemoteThumbnailUrlResolverTest extends \PHPUnit\Framework\TestCase
 
     private function createEvent(): ResolveRemoteThumbnailUrlExtension
     {
-        if (InstalledVersions::isInstalled('shopware/platform')) {
-            $shopwareVersion = InstalledVersions::getPrettyVersion('shopware/platform');
-        } else {
-            $shopwareVersion = InstalledVersions::getPrettyVersion('shopware/core');
-        }
-
-        dd(InstalledVersions::isInstalled('shopware/platform'), $shopwareVersion, version_compare($shopwareVersion, 'v6.7.3.0', '>='));
-        return version_compare($shopwareVersion, 'v6.7.3.0', '>=') ? new ResolveRemoteThumbnailUrlExtension(
+        return version_compare(ShopwareVersionHelper::getShopwareVersion(), 'v6.7.3.0', '>=') ? new ResolveRemoteThumbnailUrlExtension(
             mediaUrl: 'http://example.com/test/image.jpg',
             mediaPath: 'test/image.jpg',
             width: '100',

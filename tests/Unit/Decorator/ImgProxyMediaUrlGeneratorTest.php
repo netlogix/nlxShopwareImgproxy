@@ -10,10 +10,10 @@ declare(strict_types=1);
 
 namespace Netlogix\NlxSwImgproxy\Tests\Unit\Decorator;
 
-use Composer\InstalledVersions;
 use Netlogix\NlxSwImgproxy\Decorator\ImgProxyMediaUrlGenerator;
 use Netlogix\NlxSwImgproxy\Service\ConfigService;
 use Netlogix\NlxSwImgproxy\Service\UrlGeneratorInterface;
+use Netlogix\NlxSwImgproxy\Test\Helper\ShopwareVersionHelper;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -74,8 +74,6 @@ class ImgProxyMediaUrlGeneratorTest extends TestCase
 
     public static function SW6Version(): iterable
     {
-        $shopwareVersion = InstalledVersions::getPrettyVersion('shopware/core') ?? '0.0.0';
-
         yield 'v6.7' => [
             'version' => 'v6.7',
             'paths' => [
@@ -84,7 +82,7 @@ class ImgProxyMediaUrlGeneratorTest extends TestCase
             ],
         ];
 
-        if (version_compare($shopwareVersion, 'v6.8.0.0', '>=')) {
+        if (version_compare(ShopwareVersionHelper::getShopwareVersion(), 'v6.8.0.0', '>=')) {
             yield 'v6.8' => [
                 'version' => 'v6.8',
                 'paths' => [
@@ -124,9 +122,7 @@ class ImgProxyMediaUrlGeneratorTest extends TestCase
 
     public function testGenerateSkip(): void
     {
-        $shopwareVersion = InstalledVersions::getPrettyVersion('shopware/core') ?? '0.0.0';
-
-        if (version_compare($shopwareVersion, 'v6.8.0.0', '<')) {
+        if (version_compare(ShopwareVersionHelper::getShopwareVersion(), 'v6.8.0.0', '<')) {
             $this->markTestSkipped('This test is only relevant for Shopware versions >= 6.8.0.0');
         }
 
