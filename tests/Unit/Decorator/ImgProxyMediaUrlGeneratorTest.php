@@ -126,7 +126,7 @@ class ImgProxyMediaUrlGeneratorTest extends TestCase
     {
         $shopwareVersion = InstalledVersions::getPrettyVersion('shopware/core') ?? '0.0.0';
 
-        if (version_compare($shopwareVersion, '6.8.0.0', '<')) {
+        if (version_compare($shopwareVersion, 'v6.8.0.0', '<')) {
             $this->markTestSkipped('This test is only relevant for Shopware versions < 6.8.9');
         }
 
