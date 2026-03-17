@@ -35,6 +35,9 @@
     "allow-plugins": {
       "ergebnis/composer-normalize": true,
       "symfony/runtime": true
+    },
+    "audit": {
+      "block-insecure": false
     }
   },
   "extra": {
