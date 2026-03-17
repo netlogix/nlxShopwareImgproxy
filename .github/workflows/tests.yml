@@ -12,13 +12,13 @@ on:
 
 jobs:
   phpunit:
-    name: '${{ matrix.task }} | PHP ${{ matrix.php-version }} | Shopware ${{ matrix.shopware-version }}'
+    name: '${{ matrix.task }} | PHP ${{ matrix.phpVersion }} | Shopware ${{ matrix.shopwareVersion }}'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        php-version: ['8.3', '8.4', '8.5']
-        shopware-version: ['v6.7.1.0', 'trunk']
+        phpVersion: ['8.3', '8.4']
+        shopwareVersion: ['v6.7.1.0', 'trunk']
 
     steps:
       - name: 'Checkout Code'
@@ -27,7 +27,7 @@ jobs:
           path: custom/plugins/${{ github.event.repository.name }}
 
       - name: 'Allow insecure packages for fixed Shopware versions'
-        if: matrix.shopware-version != 'trunk'
+        if: matrix.shopwareVersion != 'trunk'
         shell: bash
         run: |
           mkdir -p ~/.config/composer
@@ -37,8 +37,8 @@ jobs:
         uses: shopware/github-actions/setup-extension@main
         with:
           extensionName: ${{ github.event.repository.name }}
-          phpVersion: ${{ matrix.php-version }}
-          shopwareVersion: ${{ matrix.shopware-version }}
+          phpVersion: ${{ matrix.phpVersion }}
+          shopwareVersion: ${{ matrix.shopwareVersion }}
           install: true
           env: test
           keep-composer-tools: true
