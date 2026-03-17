@@ -7,25 +7,38 @@ on:
 
 jobs:
   phpstan:
-    name: 'Run phpstan in ${{ matrix.working-directory }}'
+    name: 'Run phpstan in PHP ${{ matrix.phpVersion }} | Shopware ${{ matrix.shopwareVersion }}'
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        phpVersion: [ '8.3', '8.4' ]
+        shopwareVersion: [ 'v6.7.1.0', 'trunk' ]
 
     steps:
-      - name: 'Checkout code'
+      - name: 'Checkout Code'
         uses: actions/checkout@v6
-
-      - name: 'Setup PHP'
-        uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
-          tools: composer
-          coverage: 'xdebug3'
+          path: custom/plugins/${{ github.event.repository.name }}
 
-      - name: 'Install Composer Dependencies'
+      - name: 'Allow insecure packages for fixed Shopware versions'
+        if: matrix.shopwareVersion != 'trunk'
         shell: bash
-        run: composer install --prefer-dist --no-progress --no-interaction --optimize-autoloader
+        run: |
+          mkdir -p ~/.config/composer
+          printf '%s\n' '{"config":{"audit":{"block-insecure":false}}}' > ~/.config/composer/config.json
+
+      - name: 'Setup Shopware and Extension'
+        uses: shopware/github-actions/setup-extension@main
+        with:
+          extensionName: ${{ github.event.repository.name }}
+          phpVersion: ${{ matrix.phpVersion }}
+          shopwareVersion: ${{ matrix.shopwareVersion }}
+          install: true
+          env: test
+          keep-composer-tools: true
 
       - name: 'Run phpstan'
+        working-directory: custom/plugins/${{ github.event.repository.name }}
         shell: bash
-        continue-on-error: false
-        run: vendor/bin/phpstan --memory-limit=-1 --error-format=github
+        run: ../../../vendor/bin/phpstan
