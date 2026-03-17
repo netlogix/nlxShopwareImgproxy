@@ -38,6 +38,9 @@ jobs:
           env: test
           keep-composer-tools: true
 
+      - name: Install dependencies
+        run: composer require --dev shopwarelabs/phpstan-shopware
+
       - name: 'Run phpstan'
         working-directory: custom/plugins/${{ github.event.repository.name }}
         shell: bash
