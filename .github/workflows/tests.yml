@@ -12,7 +12,7 @@ on:
 
 jobs:
   phpunit:
-    name: '${{ matrix.task }} | PHP ${{ matrix.phpVersion }} | Shopware ${{ matrix.shopwareVersion }}'
+    name: 'PHP ${{ matrix.phpVersion }} | Shopware ${{ matrix.shopwareVersion }}'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
