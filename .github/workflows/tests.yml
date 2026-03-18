@@ -32,7 +32,7 @@ jobs:
           extensionName: ${{ github.event.repository.name }}
           phpVersion: ${{ matrix.phpVersion }}
           shopwareVersion: ${{ matrix.shopwareVersion }}
-          install: true
+          install: false
           env: test
           keep-composer-tools: true
           allow-insecure-versions: true
