@@ -18,7 +18,11 @@ jobs:
       fail-fast: false
       matrix:
         phpVersion: ['8.3', '8.4']
-        shopwareVersion: ['6.7.1.0', '^6.7.1']
+        shopware:
+          - version: '6.7.1.0'
+            phpstanConfig: 'phpstan.shopware-6.7.1.0.neon.dist'
+          - version: '^6.7.1'
+            phpstanConfig: 'phpstan.neon.dist'
 
     steps:
       - name: 'Checkout code'
@@ -39,19 +43,13 @@ jobs:
         shell: bash
         run: >
           composer require --no-interaction --no-update
-          shopware/core:${{ matrix.shopwareVersion }}
+          shopware/core:${{ matrix.shopware.version }}
 
       - name: 'Install Composer Dependencies'
         shell: bash
         run: >
           composer install --prefer-dist --no-progress --no-interaction --optimize-autoloader
 
-      - name: Run phpstan (default)
-        if: matrix.shopwareVersion != '6.7.1.0'
+      - name: Run phpstan
         shell: bash
-        run: vendor/bin/phpstan --configuration=phpstan.neon.dist --memory-limit=-1 --error-format=github
-
-      - name: Run phpstan (Shopware 6.7.1.0)
-        if: matrix.shopwareVersion == '6.7.1.0'
-        shell: bash
-        run: vendor/bin/phpstan --configuration=phpstan.shopware-6.7.1.0.neon.dist --memory-limit=-1 --error-format=github
+        run: vendor/bin/phpstan --configuration=${{ matrix.shopware.phpstanConfig }} --memory-limit=-1 --error-format=github
