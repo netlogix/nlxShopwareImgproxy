@@ -1,0 +1,63 @@
+name: Shopware Trunk Weekly
+
+on:
+  schedule:
+    - cron: '0 1 * * 1'
+  workflow_dispatch:
+
+jobs:
+  phpstan:
+    name: 'PHPStan'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 'Checkout code'
+        uses: actions/checkout@v6
+
+      - name: 'Setup PHP'
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          tools: composer
+          coverage: 'xdebug3'
+
+      - name: 'Set Shopware Version'
+        shell: bash
+        run: >
+          composer require --no-interaction --no-update
+          shopware/core:dev-trunk
+          shopware/storefront:dev-trunk
+
+      - name: 'Install Composer Dependencies'
+        shell: bash
+        run: >
+          composer install --prefer-dist --no-progress --no-interaction --optimize-autoloader
+
+      - name: Run phpstan
+        shell: bash
+        run: vendor/bin/phpstan --memory-limit=-1 --error-format=github
+
+  phpunit:
+    name: 'PHPUnit'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 'Checkout Code'
+        uses: actions/checkout@v6
+        with:
+          path: custom/plugins/${{ github.event.repository.name }}
+
+      - name: 'Setup Shopware and Extension'
+        uses: shopware/github-actions/setup-extension@main
+        with:
+          extensionName: ${{ github.event.repository.name }}
+          phpVersion: '8.4'
+          shopwareVersion: 'trunk'
+          install: false
+          env: test
+          keep-composer-tools: true
+
+      - name: 'Run Unit Tests'
+        working-directory: custom/plugins/${{ github.event.repository.name }}
+        shell: bash
+        run: ../../../vendor/bin/phpunit --testdox --testsuite unit
