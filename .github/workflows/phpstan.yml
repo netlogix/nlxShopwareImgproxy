@@ -45,8 +45,7 @@ jobs:
       - name: 'Install Composer Dependencies'
         shell: bash
         run: >
-          composer update shopware/core --prefer-dist --no-progress --no-interaction
-          --optimize-autoloader --with-all-dependencies
+          composer install --prefer-dist --no-progress --no-interaction --optimize-autoloader
 
       - name: 'Run phpstan'
         shell: bash
