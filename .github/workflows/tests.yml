@@ -11,14 +11,34 @@ on:
       - develop
 
 jobs:
+  version-matrix:
+    name: 'Generate Shopware version matrix'
+    runs-on: ubuntu-latest
+    outputs:
+      shopwareVersions: ${{ steps.shopware-version-matrix.outputs.matrix }}
+
+    steps:
+      - name: 'Checkout Code'
+        uses: actions/checkout@v6
+
+      - uses: ./.github/action/shopware-version-matrix
+        id: shopware-version-matrix
+        with:
+          minimum-version: 'v6.7.1.0'
+          minimum-minor: '6.7'
+
+      - name: 'Show generated matrix'
+        run: echo '${{ steps.shopware-version-matrix.outputs.matrix }}'
+
   phpunit:
+    needs: version-matrix
     name: 'PHP ${{ matrix.phpVersion }} | Shopware ${{ matrix.shopwareVersion }}'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         phpVersion: ['8.3', '8.4']
-        shopwareVersion: ['v6.7.1.0']
+        shopwareVersion: ${{ fromJson(needs.version-matrix.outputs.shopwareVersions) }}
 
     steps:
       - name: 'Checkout Code'

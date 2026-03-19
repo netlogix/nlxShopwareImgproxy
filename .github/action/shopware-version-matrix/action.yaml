@@ -1,0 +1,54 @@
+name: 'Get Shopware Build Matrix'
+description: 'Build Shopware version matrix from endoflife.date (maintained releases) with a fixed minimum version'
+
+inputs:
+  minimum-version:
+    description: 'Minimum Shopware version that must always be included'
+    required: false
+    default: 'v6.7.1.0'
+  minimum-minor:
+    description: 'Minimum Shopware minor line to include (for example 7 for 6.7)'
+    required: false
+    default: '6.7'
+
+outputs:
+  matrix:
+    description: 'JSON array of Shopware versions'
+    value: ${{ steps.fetch-versions.outputs.matrix }}
+
+runs:
+  using: composite
+  steps:
+    - name: Fetch and Filter Versions
+      id: fetch-versions
+      shell: bash
+      run: |
+        set -euo pipefail
+
+        MIN_VERSION='${{ inputs.minimum-version }}'
+        MIN_MINOR='${{ inputs.minimum-minor }}'
+
+        if [[ "${MIN_VERSION}" != v* ]]; then
+          MIN_VERSION="v${MIN_VERSION}"
+        fi
+
+        LATEST_VERSIONS=$(
+          curl -fsSL 'https://endoflife.date/api/v1/products/shopware' \
+            | jq -r --argjson minMinor "${MIN_MINOR}" '
+                .result.releases
+                | map(
+                    select(
+                      .isMaintained == true
+                      and ((.name | tonumber) >= $minMinor)
+                    )
+                    | .latest.name
+                  ) | .[] ' \
+                  | sed 's/^/v/'
+          )
+
+        MATRIX=$(
+          printf '%s\n%s\n' "${MIN_VERSION}" "${LATEST_VERSIONS}" \
+            | jq -Rsc 'split("\n") | map(select(length > 0))'
+        )
+
+        echo "matrix=${MATRIX}" >> "$GITHUB_OUTPUT"
