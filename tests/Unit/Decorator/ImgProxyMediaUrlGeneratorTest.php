@@ -76,25 +76,21 @@ class ImgProxyMediaUrlGeneratorTest extends TestCase
     {
         yield 'v6.7' => [
             'version' => 'v6.7',
-            'paths' => [
-                new UrlParams('1', UrlParamsSource::MEDIA, 'test/image.jpg'),
-                new UrlParams('2', UrlParamsSource::MEDIA, 'test/image2.jpg'),
-            ],
+            'path1' => new UrlParams('1', UrlParamsSource::MEDIA, 'test/image.jpg'),
+            'path2' => new UrlParams('2', UrlParamsSource::MEDIA, 'test/image2.jpg'),
         ];
 
         if (version_compare(ShopwareVersionHelper::getShopwareVersion(), 'v6.8.0.0', '>=')) {
             yield 'v6.8' => [
                 'version' => 'v6.8',
-                'paths' => [
-                    new UrlParams('1', UrlParamsSource::MEDIA, 'test/image.jpg', mimeType: 'image/jpeg'),
-                    new UrlParams('2', UrlParamsSource::MEDIA, 'test/image2.jpg', mimeType: 'image/jpeg'),
-                ],
+                'path1' => new UrlParams('1', UrlParamsSource::MEDIA, 'test/image.jpg', mimeType: 'image/jpeg'),
+                'path2' => new UrlParams('2', UrlParamsSource::MEDIA, 'test/image2.jpg', mimeType: 'image/jpeg'),
             ];
         }
     }
 
     #[DataProvider('SW6Version')]
-    public function testGenerate(string $version, array $paths): void
+    public function testGenerate(string $version, UrlParams $path1, UrlParams $path2): void
     {
         $this->configService->method('isEnabled')->willReturn(true);
         $this->decorated->expects($this->never())
@@ -111,11 +107,11 @@ class ImgProxyMediaUrlGeneratorTest extends TestCase
         $this->urlGenerator->expects($this->atLeastOnce())
             ->method('generateUrl')
             ->willReturnCallback(fn ($path): string => match ($path) {
-                $paths[0]->path => 'imgproxyUrl1',
-                $paths[1]->path => 'imgproxyUrl2',
+                $path1->path => 'imgproxyUrl1',
+                $path2->path => 'imgproxyUrl2',
             });
 
-        $result = $this->subject->generate($paths);
+        $result = $this->subject->generate([$path1, $path2]);
 
         self::assertSame(['imgproxyUrl1', 'imgproxyUrl2'], $result);
     }
