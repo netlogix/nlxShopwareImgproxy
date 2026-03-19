@@ -28,6 +28,10 @@ runs:
         MIN_VERSION='${{ inputs.minimum-version }}'
         MIN_MINOR='${{ inputs.minimum-minor }}'
 
+        if [[ "${MIN_VERSION}" != v* ]]; then
+          MIN_VERSION="v${MIN_VERSION}"
+        fi
+
         LATEST_VERSIONS=$(
           curl -fsSL 'https://endoflife.date/api/v1/products/shopware' \
             | jq -r --argjson minMinor "${MIN_MINOR}" '
@@ -39,6 +43,7 @@ runs:
                     )
                     | .latest.name
                   ) | .[] ' \
+                  | sed 's/^/v/'
           )
 
         MATRIX=$(

@@ -24,7 +24,7 @@ jobs:
       - uses: ./.github/action/shopware-version-matrix
         id: shopware-version-matrix
         with:
-          minimum-version: '6.7.1.0'
+          minimum-version: 'v6.7.1.0'
           minimum-minor: '6.7'
 
       - name: 'Show generated matrix'
