@@ -13,14 +13,16 @@ namespace Netlogix\NlxSwImgproxy\Tests\Unit\EventListener;
 use Netlogix\NlxSwImgproxy\EventListener\RemoteThumbnailUrlResolver;
 use Netlogix\NlxSwImgproxy\Service\ConfigService;
 use Netlogix\NlxSwImgproxy\Service\UrlGeneratorInterface;
+use Netlogix\NlxSwImgproxy\Test\Helper\ShopwareVersionHelper;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use Shopware\Core\Content\Media\Extension\ResolveRemoteThumbnailUrlExtension;
 use Shopware\Core\Framework\DataAbstractionLayer\PartialEntity;
 use Shopware\Core\Framework\Feature;
 
 #[CoversClass(RemoteThumbnailUrlResolver::class)]
-class  RemoteThumbnailUrlResolverTest extends \PHPUnit\Framework\TestCase
+class  RemoteThumbnailUrlResolverTest extends TestCase
 {
     private RemoteThumbnailUrlResolver $subject;
     private UrlGeneratorInterface&MockObject $urlGenerator;
@@ -46,15 +48,7 @@ class  RemoteThumbnailUrlResolverTest extends \PHPUnit\Framework\TestCase
 
     public function testIfDisabled(): void
     {
-        $event = new ResolveRemoteThumbnailUrlExtension(
-            mediaUrl: 'http://example.com/test/image.jpg',
-            mediaPath: 'test/image.jpg',
-            width: '100',
-            height: '100',
-            pattern: '{width}x{height}',
-            mediaUpdatedAt: null,
-            mediaEntity: new PartialEntity([])
-        );
+        $event = $this->createEvent();
 
         $this->configService
             ->expects(self::once())
@@ -72,15 +66,7 @@ class  RemoteThumbnailUrlResolverTest extends \PHPUnit\Framework\TestCase
 
     function testEvent()
     {
-        $event = new ResolveRemoteThumbnailUrlExtension(
-            mediaUrl: 'http://example.com/test/image.jpg',
-            mediaPath: 'test/image.jpg',
-            width: '100',
-            height: '100',
-            pattern: '{width}x{height}',
-            mediaUpdatedAt: null,
-            mediaEntity: new PartialEntity([])
-        );
+        $event = $this->createEvent();
 
         $this->configService
             ->expects(self::once())
@@ -100,5 +86,25 @@ class  RemoteThumbnailUrlResolverTest extends \PHPUnit\Framework\TestCase
         $this->subject->__invoke($event);
 
         self::assertEquals('http://example.com/test/image.jpg', $event->result);
+    }
+
+    private function createEvent(): ResolveRemoteThumbnailUrlExtension
+    {
+        return version_compare(ShopwareVersionHelper::getShopwareVersion(), 'v6.7.3.0', '>=') ? new ResolveRemoteThumbnailUrlExtension(
+            mediaUrl: 'http://example.com/test/image.jpg',
+            mediaPath: 'test/image.jpg',
+            width: '100',
+            height: '100',
+            pattern: '{width}x{height}',
+            mediaUpdatedAt: null,
+            mediaEntity: new PartialEntity([])
+        ) : new ResolveRemoteThumbnailUrlExtension(
+            mediaUrl: 'http://example.com/test/image.jpg',
+            mediaPath: 'test/image.jpg',
+            width: '100',
+            height: '100',
+            pattern: '{width}x{height}',
+            mediaUpdatedAt: null,
+        );
     }
 }

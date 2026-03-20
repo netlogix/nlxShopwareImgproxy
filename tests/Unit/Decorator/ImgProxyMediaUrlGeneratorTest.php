@@ -13,6 +13,7 @@ namespace Netlogix\NlxSwImgproxy\Tests\Unit\Decorator;
 use Netlogix\NlxSwImgproxy\Decorator\ImgProxyMediaUrlGenerator;
 use Netlogix\NlxSwImgproxy\Service\ConfigService;
 use Netlogix\NlxSwImgproxy\Service\UrlGeneratorInterface;
+use Netlogix\NlxSwImgproxy\Test\Helper\ShopwareVersionHelper;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -71,22 +72,26 @@ class ImgProxyMediaUrlGeneratorTest extends TestCase
         self::assertSame(['url1', 'url2'], $result);
     }
 
-    public static function SW6Version(): array
+    public static function SW6Version(): iterable
     {
-        return [
-            'v6.8' => ['v6.8'],
-            'v6.7' => ['v6.7'],
+        yield 'v6.7' => [
+            'version' => 'v6.7',
+            'path1' => new UrlParams('1', UrlParamsSource::MEDIA, 'test/image.jpg'),
+            'path2' => new UrlParams('2', UrlParamsSource::MEDIA, 'test/image2.jpg'),
         ];
+
+        if (version_compare(ShopwareVersionHelper::getShopwareVersion(), 'v6.8.0.0', '>=')) {
+            yield 'v6.8' => [
+                'version' => 'v6.8',
+                'path1' => new UrlParams('1', UrlParamsSource::MEDIA, 'test/image.jpg', mimeType: 'image/jpeg'),
+                'path2' => new UrlParams('2', UrlParamsSource::MEDIA, 'test/image2.jpg', mimeType: 'image/jpeg'),
+            ];
+        }
     }
 
     #[DataProvider('SW6Version')]
-    public function testGenerate(string $version): void
+    public function testGenerate(string $version, UrlParams $path1, UrlParams $path2): void
     {
-        $path1 = new UrlParams('1', UrlParamsSource::MEDIA, 'test/image.jpg', mimeType: 'image/jpeg');
-        $path2 = new UrlParams('2', UrlParamsSource::MEDIA, 'test/image2.jpg', mimeType: 'image/jpeg');
-
-        $paths = [$path1, $path2];
-
         $this->configService->method('isEnabled')->willReturn(true);
         $this->decorated->expects($this->never())
             ->method('generate');
@@ -106,13 +111,17 @@ class ImgProxyMediaUrlGeneratorTest extends TestCase
                 $path2->path => 'imgproxyUrl2',
             });
 
-        $result = $this->subject->generate($paths);
+        $result = $this->subject->generate([$path1, $path2]);
 
         self::assertSame(['imgproxyUrl1', 'imgproxyUrl2'], $result);
     }
 
     public function testGenerateSkip(): void
     {
+        if (version_compare(ShopwareVersionHelper::getShopwareVersion(), 'v6.8.0.0', '<')) {
+            $this->markTestSkipped('This test is only relevant for Shopware versions >= 6.8.0.0');
+        }
+
         Feature::setActive('UrlParams_has_mimeType', true);
 
         $path1 = new UrlParams('1', UrlParamsSource::MEDIA, 'test/image.jpg', mimeType: 'foo/bar');
