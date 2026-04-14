@@ -14,13 +14,21 @@ jobs:
   sync-to-develop:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
+    environment: Netlogix Release Bot
 
     steps:
+      - name: Create GitHub App token
+        uses: actions/create-github-app-token@v3
+        id: release-bot-app-token
+        with:
+          client-id: ${{ vars.RELEASE_BOT_CLIENT_ID }}
+          private-key: ${{ secrets.RELEASE_BOT_PRIVATE_KEY }}
+
       - name: Checkout (full history)
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-          token: ${{ secrets.GH_AUTOMATION_TOKEN }}
+          token: ${{ steps.release-bot-app-token.outputs.token }}
 
       - name: Configure git & auth
         run: |
@@ -76,7 +84,7 @@ jobs:
           echo "nothing_to_sync=false" >> "$GITHUB_OUTPUT"
           echo "done"
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_AUTOMATION_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.release-bot-app-token.outputs.token }}
 
       - name: Done
         if: steps.sync.outputs.nothing_to_sync == 'true'
