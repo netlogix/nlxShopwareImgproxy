@@ -11,6 +11,7 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
+    environment: Netlogix Release Bot
     steps:
       - name: Checkout
         uses: actions/checkout@v6
