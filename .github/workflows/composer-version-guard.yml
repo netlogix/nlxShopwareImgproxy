@@ -4,9 +4,6 @@ on:
   pull_request:
     branches: [develop]
 
-env:
-  GITHUB_TOKEN: ${{ secrets.GH_AUTOMATION_TOKEN }}
-
 jobs:
   no-manual-version-bump:
     name: Disallow manual composer.json version bumps
