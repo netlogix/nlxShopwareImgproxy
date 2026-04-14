@@ -1,80 +1,80 @@
 {
-  "name": "netlogix/nlx-sw-imgproxy",
-  "description": "Plugin to allow shopware to authenticate and support image proxy",
-  "license": "MIT",
-  "type": "shopware-platform-plugin",
-  "version": "1.4.0",
-  "authors": [
-    {
-      "name": "netlogix GmbH & Co. KG"
-    }
-  ],
-  "require": {
-    "php": ">= 8.3",
-    "shopware/core": "*"
-  },
-  "require-dev": {
-    "ergebnis/composer-normalize": "^2.47",
-    "netlogix/coding-guidelines-php": "^1.0",
-    "phpunit/phpunit": "^12.0",
-    "rector/rector": "^2.1",
-    "shopwarelabs/phpstan-shopware": "^0.1.14",
-    "shopware/storefront": "*"
-  },
-  "autoload": {
-    "psr-4": {
-      "Netlogix\\NlxSwImgproxy\\": "src/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Netlogix\\NlxSwImgproxy\\Test\\": "tests/"
-    }
-  },
-  "config": {
-    "allow-plugins": {
-      "ergebnis/composer-normalize": true,
-      "symfony/runtime": true
-    },
-    "audit": {
-      "block-insecure": false
-    }
-  },
-  "extra": {
-    "label": {
-      "de-DE": "imgproxy Unterstützung",
-      "en-GB": "imgproxy support"
-    },
-    "description": {
-      "de-DE": "Dieses Plugin fügt Shopware Support für ImgProxy hinzu. Damit ermöglicht es schnelle serverseitige Resize- und Crop-Transformationen, WebP/AVIF-Ausgabe und signierte Urls.",
-      "en-GB": "This plugin adds ImgProxy support to Shopware. It enables fast server-side resize and crop transformations, WebP/AVIF output, signed URLs, and reduced storage"
-    },
-    "manufacturerLink": {
-      "de-DE": "https://www.netlogix.de",
-      "en-GB": "https://www.netlogix.de"
-    },
-    "supportLink": {
-      "de-DE": "https://www.netlogix.de",
-      "en-GB": "https://www.netlogix.de"
-    },
-    "shopware-plugin-class": "Netlogix\\NlxSwImgproxy\\NlxSwImgproxy"
-  },
-  "scripts": {
-    "composer:normalize": "@composer normalize --no-check-lock --dry-run",
-    "composer:normalize:fix": "@composer normalize --no-check-lock",
-    "ecs": "ecs check",
-    "ecs:fix": "ecs check --fix",
-    "lint:fix": [
-      "@composer:normalize:fix",
-      "@rector:fix",
-      "@ecs:fix"
+    "name": "netlogix/nlx-sw-imgproxy",
+    "description": "Plugin to allow shopware to authenticate and support image proxy",
+    "license": "MIT",
+    "type": "shopware-platform-plugin",
+    "version": "1.0.0",
+    "authors": [
+        {
+            "name": "netlogix GmbH & Co. KG"
+        }
     ],
-    "phpstan": "vendor/bin/phpstan",
-    "rector": "vendor/bin/rector process --dry-run",
-    "rector:fix": "vendor/bin/rector process",
-    "test": [
-      "@test:unit"
-    ],
-    "test:unit": "vendor/bin/phpunit --testdox --testsuite unit"
-  }
+    "require": {
+        "php": ">= 8.3",
+        "shopware/core": "*"
+    },
+    "require-dev": {
+        "ergebnis/composer-normalize": "^2.47",
+        "netlogix/coding-guidelines-php": "^1.0",
+        "phpunit/phpunit": "^12.0",
+        "rector/rector": "^2.1",
+        "shopwarelabs/phpstan-shopware": "^0.1.14",
+        "shopware/storefront": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Netlogix\\NlxSwImgproxy\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Netlogix\\NlxSwImgproxy\\Test\\": "tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "ergebnis/composer-normalize": true,
+            "symfony/runtime": true
+        },
+        "audit": {
+            "block-insecure": false
+        }
+    },
+    "extra": {
+        "label": {
+            "de-DE": "imgproxy Unterstützung",
+            "en-GB": "imgproxy support"
+        },
+        "description": {
+            "de-DE": "Dieses Plugin fügt Shopware Support für ImgProxy hinzu. Damit ermöglicht es schnelle serverseitige Resize- und Crop-Transformationen, WebP/AVIF-Ausgabe und signierte Urls.",
+            "en-GB": "This plugin adds ImgProxy support to Shopware. It enables fast server-side resize and crop transformations, WebP/AVIF output, signed URLs, and reduced storage"
+        },
+        "manufacturerLink": {
+            "de-DE": "https://www.netlogix.de",
+            "en-GB": "https://www.netlogix.de"
+        },
+        "supportLink": {
+            "de-DE": "https://www.netlogix.de",
+            "en-GB": "https://www.netlogix.de"
+        },
+        "shopware-plugin-class": "Netlogix\\NlxSwImgproxy\\NlxSwImgproxy"
+    },
+    "scripts": {
+        "composer:normalize": "@composer normalize --no-check-lock --dry-run",
+        "composer:normalize:fix": "@composer normalize --no-check-lock",
+        "ecs": "ecs check",
+        "ecs:fix": "ecs check --fix",
+        "lint:fix": [
+            "@composer:normalize:fix",
+            "@rector:fix",
+            "@ecs:fix"
+        ],
+        "phpstan": "vendor/bin/phpstan",
+        "rector": "vendor/bin/rector process --dry-run",
+        "rector:fix": "vendor/bin/rector process",
+        "test": [
+            "@test:unit"
+        ],
+        "test:unit": "vendor/bin/phpunit --testdox --testsuite unit"
+    }
 }
