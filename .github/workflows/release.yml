@@ -12,6 +12,8 @@ jobs:
   release:
     runs-on: ubuntu-latest
     environment: Netlogix Release Bot
+    outputs:
+      release_bot_token: ${{ steps.release-bot-app-token.outputs.token }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -40,3 +42,5 @@ jobs:
     permissions:
       contents: write
     uses: ./.github/workflows/release_sync.yml
+    with:
+      release_bot_token: ${{ needs.release.outputs.release_bot_token }}
