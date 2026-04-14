@@ -1,0 +1,7 @@
+includes:
+    - phpstan.neon.dist
+
+parameters:
+    ignoreErrors:
+        - message: '#Access to an undefined property Shopware\\Core\\Content\\Media\\Extension\\ResolveRemoteThumbnailUrlExtension::\$mediaEntity\.#'
+          path: src/EventListener/RemoteThumbnailUrlResolver.php
