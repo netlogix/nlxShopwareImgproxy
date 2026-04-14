@@ -2,9 +2,6 @@ name: Sync release artifacts to develop
 
 on:
   workflow_call:
-    secrets:
-      token:
-        required: true
 
 permissions:
   contents: write
@@ -17,17 +14,26 @@ jobs:
     environment: Netlogix Release Bot
 
     steps:
+      - name: Create GitHub App token
+        uses: actions/create-github-app-token@v3
+        id: release-bot-app-token
+        with:
+          client-id: ${{ vars.RELEASE_BOT_CLIENT_ID }}
+          private-key: ${{ secrets.RELEASE_BOT_PRIVATE_KEY }}
+
       - name: Checkout (full history)
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-          token: ${{ secrets.token }}
+          token: ${{ steps.release-bot-app-token.outputs.token }}
 
       - name: Configure git & auth
         run: |
           git config user.name  "${GIT_AUTHOR_NAME}"
           git config user.email "${GIT_AUTHOR_EMAIL}"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"
+        env:
+          GITHUB_TOKEN: ${{ steps.release-bot-app-token.outputs.token }}
 
       - name: Fetch branches (heads only, no tags; avoid ambiguous refs)
         run: |
@@ -77,7 +83,7 @@ jobs:
           echo "nothing_to_sync=false" >> "$GITHUB_OUTPUT"
           echo "done"
         env:
-          GITHUB_TOKEN: ${{ secrets.token }}
+          GITHUB_TOKEN: ${{ steps.release-bot-app-token.outputs.token }}
 
       - name: Done
         if: steps.sync.outputs.nothing_to_sync == 'true'
