@@ -12,8 +12,6 @@ jobs:
   release:
     runs-on: ubuntu-latest
     environment: Netlogix Release Bot
-    outputs:
-      release_bot_token: ${{ steps.release-bot-app-token.outputs.token }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -39,8 +37,78 @@ jobs:
 
   sync-to-develop:
     needs: release
+    runs-on: ubuntu-latest
+    environment: Netlogix Release Bot
     permissions:
       contents: write
-    uses: ./.github/workflows/release_sync.yml
-    with:
-      release_bot_token: ${{ needs.release.outputs.release_bot_token }}
+    steps:
+      - name: Create GitHub App token
+        uses: actions/create-github-app-token@v3
+        id: release-bot-app-token
+        with:
+          client-id: ${{ vars.RELEASE_BOT_CLIENT_ID }}
+          private-key: ${{ secrets.RELEASE_BOT_PRIVATE_KEY }}
+
+      - name: Checkout (full history)
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          token: ${{ steps.release-bot-app-token.outputs.token }}
+
+      - name: Configure git & auth
+        run: |
+          git config user.name  "${GIT_AUTHOR_NAME}"
+          git config user.email "${GIT_AUTHOR_EMAIL}"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"
+        env:
+          GITHUB_TOKEN: ${{ steps.release-bot-app-token.outputs.token }}
+
+      - name: Fetch branches (heads only, no tags; avoid ambiguous refs)
+        run: |
+          set -euo pipefail
+
+          echo "Fetching main and develop branches..."
+          git fetch --no-tags --prune origin \
+            +refs/heads/main:refs/remotes/origin/main \
+            +refs/heads/develop:refs/remotes/origin/develop
+
+      - name: Sync composer.json & CHANGELOG.md from main to develop
+        id: sync
+        run: |
+          set -euo pipefail
+
+          echo "Configuring git user for pushing changes..."
+          git config user.email "websolutions@netlogix.de"
+          git config user.name "netlogix-bot"
+
+          echo "Checking for differences in composer.json and CHANGELOG.md between main and develop..."
+          if git diff --quiet \
+           refs/remotes/origin/develop..refs/remotes/origin/main \
+           -- composer.json CHANGELOG.md; then
+          echo "nothing_to_sync=true" >> "$GITHUB_OUTPUT"
+          exit 0
+          fi
+
+          echo "Checking out develop branch..."
+          git checkout -B develop refs/remotes/origin/develop
+
+          echo "Checking out composer.json and CHANGELOG.md from main branch..."
+          git checkout refs/remotes/origin/main -- composer.json CHANGELOG.md
+
+          echo "Committing changes..."
+          git add composer.json CHANGELOG.md
+          git commit -m "[release-sync] chore: sync composer.json & CHANGELOG.md from main to develop [skip ci]" || {
+            echo "nothing_to_sync=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          }
+
+          echo "Pushing changes to develop branch..."
+          git push origin HEAD:develop
+          echo "nothing_to_sync=false" >> "$GITHUB_OUTPUT"
+          echo "done"
+        env:
+          GITHUB_TOKEN: ${{ steps.release-bot-app-token.outputs.token }}
+
+      - name: Done
+        if: steps.sync.outputs.nothing_to_sync == 'true'
+        run: echo "Nichts zu syncen (composer.json/CHANGELOG.md identisch)."
