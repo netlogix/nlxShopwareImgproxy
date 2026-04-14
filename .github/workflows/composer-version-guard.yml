@@ -5,7 +5,7 @@ on:
     branches: [develop]
 
 env:
-  GITHUB_TOKEN: ${{ secrets.GH_AUTOMATION_TOKEN }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   no-manual-version-bump:
