@@ -64,6 +64,6 @@ class UrlGenerator implements UrlGeneratorInterface
 
     public function supportMimeType(string $type): bool
     {
-        return str_starts_with($type, 'image/');
+        return 'phpstan-ci-test';
     }
 }
