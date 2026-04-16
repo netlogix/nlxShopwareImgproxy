@@ -1,0 +1,9 @@
+{% sw_extends '@Storefront/storefront/layout/meta.html.twig' %}
+
+{% block layout_head_meta_tags_viewport %}
+    {{ parent() }}
+    {% set imgProxyBaseUrl = config('NlxSwImgproxy.config.baseUrl') %}
+    {% if imgProxyBaseUrl and config('NlxSwImgproxy.config.enableHtmlPreconnect') %}
+        <link rel="preconnect" href="{{ imgProxyBaseUrl }}" crossorigin />
+    {% endif %}
+{% endblock %}

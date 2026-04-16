@@ -12,6 +12,7 @@ namespace Netlogix\NlxSwImgproxy\Service;
 
 use Netlogix\NlxSwImgproxy\Enum\ResizeType;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * @codeCoverageIgnore
@@ -21,33 +22,33 @@ class ConfigService
     public const string CONFIG_DOMAIN = 'NlxSwImgproxy.config';
 
     public function __construct(
-        private readonly SystemConfigService $systemConfigService
+        private readonly SystemConfigService $systemConfigService,
+        #[Autowire(param: 'shopware.media.remote_thumbnails.enable')]
+        private readonly bool $remoteThumbnailsEnable
     ) {
     }
 
     public function isEnabled(?string $salesChannelId = null): bool
     {
         return $this->systemConfigService->getBool($this->getConfigKey('enable'), $salesChannelId)
-            && $this->getBaseUrl($salesChannelId) !== null;
+            && $this->getBaseUrl($salesChannelId) !== null && $this->remoteThumbnailsEnable;
     }
 
     public function getBaseUrl(?string $salesChannelId = null): ?string
     {
-        return $this->systemConfigService->getString($this->getConfigKey('baseUrl'), $salesChannelId)
-            ?: null;
+        return $this->systemConfigService->getString($this->getConfigKey('baseUrl'), $salesChannelId);
     }
 
     public function getImageSource(?string $salesChannelId = null): string
     {
-        return $this->systemConfigService->getString($this->getConfigKey('imageSource'), $salesChannelId)
-            ?? '';
+        return $this->systemConfigService->getString($this->getConfigKey('imageSource'), $salesChannelId);
     }
 
     public function getResizeType(?string $salesChannelId = null): ?ResizeType
     {
         $value = $this->systemConfigService->getString($this->getConfigKey('resizeType'), $salesChannelId);
 
-        return $value ? ResizeType::from($value) : null;
+        return $value !== '' && $value !== '0' ? ResizeType::from($value) : null;
     }
 
     public function isSecure(?string $salesChannelId = null): bool
@@ -58,18 +59,16 @@ class ConfigService
 
     public function getKey(?string $salesChannelId = null): ?string
     {
-        $key = $this->systemConfigService->getString($this->getConfigKey('key'), $salesChannelId)
-            ?? null;
+        $key = $this->systemConfigService->getString($this->getConfigKey('key'), $salesChannelId);
 
-        return $key ? pack("H*", $key) : $key;
+        return $key !== '' ? pack("H*", $key) : $key;
     }
 
     public function getSalt(?string $salesChannelId = null): ?string
     {
-        $salt = $this->systemConfigService->getString($this->getConfigKey('salt'), $salesChannelId)
-            ?? null;
+        $salt = $this->systemConfigService->getString($this->getConfigKey('salt'), $salesChannelId);
 
-        return $salt ? pack("H*", $salt) : $salt;
+        return $salt !== '' ? pack("H*", $salt) : $salt;
     }
 
     private function getConfigKey(string $key): string

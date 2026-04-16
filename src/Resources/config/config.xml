@@ -2,58 +2,90 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/trunk/src/Core/System/SystemConfig/Schema/config.xsd">
     <card>
-        <title>Basics</title>
+        <title lang="en-GB">Basics</title>
+        <title lang="de-DE">Grundlagen</title>
         <input-field type="bool">
             <name>enable</name>
-            <label>Enable imgproxy</label>
+            <label lang="en-GB">Enable imgproxy</label>
+            <label lang="de-DE">imgproxy aktivieren</label>
             <defaultValue>0</defaultValue>
+        </input-field>
+
+        <input-field type="bool">
+            <name>enableHtmlPreconnect</name>
+            <label lang="en-GB">Enable HTML preconnect</label>
+            <label lang="de-DE">HTML Preconnect aktivieren</label>
+            <defaultValue>1</defaultValue>
         </input-field>
 
         <input-field type="url">
             <name>baseUrl</name>
-            <label>BaseUrl of the imgproxy</label>
+            <label lang="en-GB">Base URL of imgproxy</label>
+            <label lang="de-DE">Basis-URL von imgproxy</label>
             <required>false</required>
         </input-field>
 
         <input-field type="single-select">
             <name>resizeType</name>
-            <label>Resize type</label>
+            <label lang="en-GB">Resize type</label>
+            <label lang="de-DE">Resize-Typ</label>
             <required>false</required>
-            <option>
-                <id/>
-                <name>empty</name>
-                <id>fit</id>
-                <name>fit</name>
-                <id>fill</id>
-                <name>fill</name>
-                <id>fillDown</id>
-                <name>fillDown</name>
-                <id>force</id>
-                <name>force</name>
-                <id>auto</id>
-                <name>auto</name>
-            </option>
-
+            <options>
+                <option>
+                    <id>0</id>
+                    <name lang="en-GB">none</name>
+                    <name lang="de-DE">keiner</name>
+                </option>
+                <option>
+                    <id>fit</id>
+                    <name lang="en-GB">fit</name>
+                    <name lang="de-DE">fit</name>
+                </option>
+                <option>
+                    <id>fill</id>
+                    <name lang="en-GB">fill</name>
+                    <name lang="de-DE">fill</name>
+                </option>
+                <option>
+                    <id>fillDown</id>
+                    <name lang="en-GB">fillDown</name>
+                    <name lang="de-DE">fillDown</name>
+                </option>
+                <option>
+                    <id>force</id>
+                    <name lang="en-GB">force</name>
+                    <name lang="de-DE">force</name>
+                </option>
+                <option>
+                    <id>auto</id>
+                    <name lang="en-GB">auto</name>
+                    <name lang="de-DE">auto</name>
+                </option>
+            </options>
         </input-field>
 
         <input-field type="text">
             <name>imageSource</name>
-            <label>ImageSourceimgproxy</label>
+            <label lang="en-GB">Image source</label>
+            <label lang="de-DE">Bildquelle</label>
             <required>false</required>
         </input-field>
     </card>
 
     <card>
-        <title>Secure imgproxy</title>
+        <title lang="en-GB">Secure imgproxy</title>
+        <title lang="de-DE">Sicheres imgproxy</title>
         <input-field type="text">
             <name>key</name>
-            <label>imgproxy key</label>
+            <label lang="en-GB">imgproxy key</label>
+            <label lang="de-DE">imgproxy Schlüssel</label>
             <required>false</required>
         </input-field>
 
         <input-field type="password">
             <name>salt</name>
-            <label>imgproxy salt</label>
+            <label lang="en-GB">imgproxy salt</label>
+            <label lang="de-DE">imgproxy Salt</label>
             <required>false</required>
         </input-field>
     </card>
