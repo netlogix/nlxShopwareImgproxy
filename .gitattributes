@@ -2,8 +2,13 @@
 
 /tests export-ignore
 
-/.env export-ignore
 /.env.test export-ignore
 /.gitignore export-ignore
+/.releaserc export-ignore
 /ecs.php export-ignore
+/package.json export-ignore
+/package-lock.json export-ignore
+/phpstan.neon.dist export-ignore
+/phpstan.shopware-6.7.1.0.neon.dist export-ignore
 /phpunit.xml.dist export-ignore
+/rector.php export-ignore
