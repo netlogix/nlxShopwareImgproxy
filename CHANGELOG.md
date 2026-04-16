@@ -1,3 +1,5 @@
+# [1.6.0](https://github.com/netlogix/nlxShopwareImgproxy/compare/v1.5.0...v1.6.0) (2026-04-16)
+
 ## [1.0.5](https://github.com/netlogix/nlxShopwareImgproxy/compare/v1.0.4...v1.0.5) (2026-04-14)
 
 ## [1.0.4](https://github.com/netlogix/nlxShopwareImgproxy/compare/v1.0.3...v1.0.4) (2026-04-14)
