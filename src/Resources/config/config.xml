@@ -78,6 +78,7 @@
             <helpText><![CDATA[If enabled, it uses the createdAt/updatedAt timestamp as <a href="https://docs.imgproxy.net/usage/processing#cache-buster" target=blank">imgproxy cachebuster</a>]]></helpText>
             <helpText lang="de-DE"><![CDATA[Wenn aktiviert, verwendet es das createdAt/updatedAt timestamp als <a href="https://docs.imgproxy.net/usage/processing#cache-buster" target=blank">imgproxy cachebuster</a>]]></helpText>
             <required>false</required>
+            <defaultValue>0</defaultValue>
         </input-field>
     </card>
 

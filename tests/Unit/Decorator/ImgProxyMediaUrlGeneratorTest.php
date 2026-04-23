@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace Netlogix\NlxSwImgproxy\Tests\Unit\Decorator;
 
-use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use Netlogix\NlxSwImgproxy\Decorator\ImgProxyMediaUrlGenerator;
 use Netlogix\NlxSwImgproxy\Service\ConfigService;
 use Netlogix\NlxSwImgproxy\Service\UrlGeneratorInterface;
@@ -25,7 +24,6 @@ use Shopware\Core\Content\Media\Core\Params\UrlParamsSource;
 use Shopware\Core\Framework\Feature;
 
 #[CoversClass(ImgProxyMediaUrlGenerator::class)]
-#[AllowMockObjectsWithoutExpectations]
 class ImgProxyMediaUrlGeneratorTest extends TestCase
 {
     private ImgProxyMediaUrlGenerator $subject;

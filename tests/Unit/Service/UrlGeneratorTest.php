@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace Netlogix\NlxSwImgproxy\Tests\Unit\Service;
 
-use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use Netlogix\NlxSwImgproxy\Enum\ResizeType;
 use Netlogix\NlxSwImgproxy\Model\Image;
 use Netlogix\NlxSwImgproxy\Service\ConfigService;
@@ -23,7 +22,6 @@ use PHPUnit\Framework\TestCase;
 
 #[CoversClass(UrlGenerator::class)]
 #[UsesClass(Image::class)]
-#[AllowMockObjectsWithoutExpectations]
 class UrlGeneratorTest extends TestCase
 {
     private UrlGenerator $subject;

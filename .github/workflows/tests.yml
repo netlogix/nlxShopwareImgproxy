@@ -50,9 +50,12 @@ jobs:
         uses: shopware/github-actions/setup-extension@main
         with:
           extensionName: ${{ github.event.repository.name }}
+          shopware-github-token: ${{ secrets.GITHUB_TOKEN }}
           phpVersion: ${{ matrix.phpVersion }}
           shopwareVersion: ${{ matrix.shopwareVersion }}
-          install: false
+          node-version: 22
+          skip-js-build: true
+          install: true
           env: test
           keep-composer-tools: true
           allow-insecure-versions: true
@@ -62,7 +65,12 @@ jobs:
         shell: bash
         run: composer validate
 
+      - name: 'composer install'
+        working-directory: custom/plugins/${{ github.event.repository.name }}
+        shell: bash
+        run: composer install --no-interaction --no-progress --no-ansi --no-interaction
+
       - name: 'Run Unit Tests'
         working-directory: custom/plugins/${{ github.event.repository.name }}
         shell: bash
-        run: ../../../vendor/bin/phpunit --testdox --testsuite unit
+        run: vendor/bin/phpunit --testdox --testsuite unit
