@@ -70,6 +70,15 @@
             <label lang="de-DE">Bildquelle</label>
             <required>false</required>
         </input-field>
+
+        <input-field type="bool">
+            <name>cacheBuster</name>
+            <label lang="en-GB">Enable Cache buster</label>
+            <label lang="de-DE">Enable Cache Buster</label>
+            <helpText><![CDATA[If enabled, it uses the createdAt/updatedAt timestamp as <a href="https://docs.imgproxy.net/usage/processing#cache-buster" target=blank">imgproxy cachebuster</a>]]></helpText>
+            <helpText lang="de-DE"><![CDATA[Wenn aktiviert, verwendet es das createdAt/updatedAt timestamp als <a href="https://docs.imgproxy.net/usage/processing#cache-buster" target=blank">imgproxy cachebuster</a>]]></helpText>
+            <required>false</required>
+        </input-field>
     </card>
 
     <card>

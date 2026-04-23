@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Netlogix\NlxSwImgproxy\Tests\Unit\Service;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use Netlogix\NlxSwImgproxy\Enum\ResizeType;
 use Netlogix\NlxSwImgproxy\Model\Image;
 use Netlogix\NlxSwImgproxy\Service\ConfigService;
@@ -19,10 +20,10 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Shopware\Core\Framework\Feature;
 
 #[CoversClass(UrlGenerator::class)]
 #[UsesClass(Image::class)]
+#[AllowMockObjectsWithoutExpectations]
 class UrlGeneratorTest extends TestCase
 {
     private UrlGenerator $subject;
@@ -63,6 +64,58 @@ class UrlGeneratorTest extends TestCase
             'height' => '200',
             'expectedUrl' => '#^https://image-proxy\.example\.com/insecure/w:100/h:200/[a-zA-Z0-9_-]+$#i',
         ];
+
+        yield 'with cacheBuster' => [
+            'imagePath' => 'test/image.jpg',
+            'expectedUrl' => '#^https://image-proxy\.example\.com/insecure/cb:1672531200/[a-zA-Z0-9_-]+$#i',
+            'width' => null,
+            'height' => null,
+            'key' => null,
+            'salt' => null,
+            'baseUrl' => 'https://image-proxy.example.com',
+            'resizeType' => null,
+            'cacheBusterEnabled' => true,
+            'imageDate' => new \DateTimeImmutable('2023-01-01 00:00:00'),
+        ];
+
+        yield 'with cacheBuster disabled' => [
+            'imagePath' => 'test/image.jpg',
+            'expectedUrl' => '#^https://image-proxy\.example\.com/insecure/[a-zA-Z0-9_-]+$#i',
+            'width' => null,
+            'height' => null,
+            'key' => null,
+            'salt' => null,
+            'baseUrl' => 'https://image-proxy.example.com',
+            'resizeType' => null,
+            'cacheBusterEnabled' => false,
+            'imageDate' => new \DateTimeImmutable('2023-01-01 00:00:00'),
+        ];
+
+        yield 'with cacheBuster enabled but no imageDate' => [
+            'imagePath' => 'test/image.jpg',
+            'expectedUrl' => '#^https://image-proxy\.example\.com/insecure/[a-zA-Z0-9_-]+$#i',
+            'width' => null,
+            'height' => null,
+            'key' => null,
+            'salt' => null,
+            'baseUrl' => 'https://image-proxy.example.com',
+            'resizeType' => null,
+            'cacheBusterEnabled' => true,
+            'imageDate' => null,
+        ];
+
+        yield 'with cacheBuster and size' => [
+            'imagePath' => 'test/image.jpg',
+            'expectedUrl' => '#^https://image-proxy\.example\.com/insecure/cb:1672531200/w:100/h:200/[a-zA-Z0-9_-]+$#i',
+            'width' => '100',
+            'height' => '200',
+            'key' => null,
+            'salt' => null,
+            'baseUrl' => 'https://image-proxy.example.com',
+            'resizeType' => null,
+            'cacheBusterEnabled' => true,
+            'imageDate' => new \DateTimeImmutable('2023-01-01 00:00:00'),
+        ];
     }
 
     #[DataProvider('generateUrlDataProvider')]
@@ -74,7 +127,9 @@ class UrlGeneratorTest extends TestCase
         ?string $key = null,
         ?string $salt = null,
         string $baseUrl = 'https://image-proxy.example.com',
-        ?ResizeType $resizeType = null
+        ?ResizeType $resizeType = null,
+        bool $cacheBusterEnabled = false,
+        ?\DateTimeInterface $imageDate = null
     ): void {
         $this->configService->expects(self::atLeastOnce())
             ->method('getBaseUrl')
@@ -94,8 +149,11 @@ class UrlGeneratorTest extends TestCase
         $this->configService
             ->method('getSalt')
             ->willReturn($salt);
+        $this->configService
+            ->method('isCacheBusterEnabled')
+            ->willReturn($cacheBusterEnabled);
 
-        $generatedUrl = $this->subject->generateUrl($imagePath, $width, $height);
+        $generatedUrl = $this->subject->generateUrl($imagePath, $width, $height, $imageDate);
 
         $this->assertMatchesRegularExpression($expectedUrl, $generatedUrl);
     }

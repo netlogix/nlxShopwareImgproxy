@@ -25,10 +25,12 @@ use Shopware\Core\Framework\Feature;
 class  RemoteThumbnailUrlResolverTest extends TestCase
 {
     private RemoteThumbnailUrlResolver $subject;
+
     private UrlGeneratorInterface&MockObject $urlGenerator;
+
     private ConfigService&MockObject $configService;
 
-    function setUp(): void
+    protected function setUp(): void
     {
         $this->urlGenerator = $this->createMock(UrlGeneratorInterface::class);
         $this->configService = $this->createMock(ConfigService::class);
@@ -64,7 +66,7 @@ class  RemoteThumbnailUrlResolverTest extends TestCase
         self::assertEquals(null, $event->result);
     }
 
-    function testEvent()
+    public function testEvent(): void
     {
         $event = $this->createEvent();
 

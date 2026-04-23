@@ -58,7 +58,10 @@ class ImgProxyMediaUrlGenerator extends AbstractMediaUrlGenerator
 
         return [
             ...($images === [] ? [] : array_map(
-                fn (UrlParams $path): string => $this->urlGenerator->generateUrl($path->path),
+                fn (UrlParams $path): string => $this->urlGenerator->generateUrl(
+                    imagePath: $path->path,
+                    imageDate: $path->updatedAt,
+                ),
                 $images
             )),
             ...($default === [] ? [] : $this->decorated->generate($default)),

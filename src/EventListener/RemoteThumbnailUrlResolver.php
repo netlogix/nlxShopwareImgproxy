@@ -40,7 +40,7 @@ class RemoteThumbnailUrlResolver
             (Feature::has('v6.8.0.0') && Feature::isActive('v6.8.0.0'))
             || Feature::isActive('UrlParams_has_mimeType')
         ) {
-            $mimeType = $extension->mediaEntity->get('mimeType') ?? '';
+            $mimeType = $extension->mediaEntity->getMimeType() ?? '';
 
             if (!$this->urlGenerator->supportMimeType($mimeType)) {
                 return;
@@ -48,9 +48,10 @@ class RemoteThumbnailUrlResolver
         }
 
         $extension->result = $this->urlGenerator->generateUrl(
-            $extension->mediaPath,
-            $extension->width,
-            $extension->height
+            imagePath: $extension->mediaPath,
+            width: $extension->width,
+            height: $extension->height,
+            imageDate: $extension->mediaEntity->getUpdatedAt() ?? $extension->mediaEntity->getCreatedAt() ?? null
         );
     }
 }
