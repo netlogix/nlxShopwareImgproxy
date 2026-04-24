@@ -13,12 +13,14 @@ use Netlogix\NlxSwImgproxy\Decorator\UrlEncodingTwigFilterDecorator;
 use Netlogix\NlxSwImgproxy\Service\ConfigService;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(UrlEncodingTwigFilterDecorator::class)]
-class UrlEncodingTwigFilterDecoratorTests extends TestCase
+class UrlEncodingTwigFilterDecoratorTest extends TestCase
 {
-    private ConfigService $configService;
+    private MockObject $configService;
+
     private UrlEncodingTwigFilterDecorator $subject;
 
     protected function setUp(): void

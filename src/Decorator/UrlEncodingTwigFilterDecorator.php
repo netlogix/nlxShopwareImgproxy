@@ -37,7 +37,7 @@ class UrlEncodingTwigFilterDecorator extends UrlEncodingTwigFilter
 
         $baseUrl = $this->configService->getBaseUrl();
 
-        if (empty($baseUrl)) {
+        if (in_array($baseUrl, [null, '', '0'], true)) {
             return false;
         }
 

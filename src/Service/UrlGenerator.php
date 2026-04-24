@@ -10,17 +10,22 @@ declare(strict_types=1);
 
 namespace Netlogix\NlxSwImgproxy\Service;
 
+use DateTimeInterface;
 use Netlogix\NlxSwImgproxy\Model\Image;
 
 class UrlGenerator implements UrlGeneratorInterface
 {
     public function __construct(
-        private readonly ConfigService $configService
+        private readonly ConfigService $configService,
     ) {
     }
 
-    public function generateUrl(string $imagePath, ?string $width = null, ?string $height = null): string
-    {
+    public function generateUrl(
+        string $imagePath,
+        ?string $width = null,
+        ?string $height = null,
+        ?DateTimeInterface $imageDate = null
+    ): string {
         $image = new Image($this->configService->getImageSource(), $imagePath);
 
         if ($width) {
@@ -29,6 +34,10 @@ class UrlGenerator implements UrlGeneratorInterface
 
         if ($height) {
             $image->height = (int) $height;
+        }
+
+        if ($this->configService->isCacheBusterEnabled() && $imageDate instanceof DateTimeInterface) {
+            $image->cacheBuster = (string) $imageDate->getTimestamp();
         }
 
         $image->resizeType = $this->configService->getResizeType();

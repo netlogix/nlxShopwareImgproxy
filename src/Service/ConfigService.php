@@ -71,6 +71,11 @@ class ConfigService
         return $salt !== '' ? pack("H*", $salt) : $salt;
     }
 
+    public function isCacheBusterEnabled(?string $salesChannelId = null): ?bool
+    {
+        return $this->systemConfigService->getBool($this->getConfigKey('cacheBuster'), $salesChannelId);
+    }
+
     private function getConfigKey(string $key): string
     {
         return sprintf('%s.%s', self::CONFIG_DOMAIN, $key);
