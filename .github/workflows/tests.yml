@@ -65,12 +65,11 @@ jobs:
         shell: bash
         run: composer validate
 
-      - name: 'composer install'
-        working-directory: custom/plugins/${{ github.event.repository.name }}
+      - name: 'Require PHPUnit 12'
         shell: bash
-        run: composer install --no-interaction --no-progress --no-ansi --no-interaction
+        run: composer require --dev phpunit/phpunit:^12.0 --with-dependencies
 
       - name: 'Run Unit Tests'
         working-directory: custom/plugins/${{ github.event.repository.name }}
         shell: bash
-        run: vendor/bin/phpunit --testdox --testsuite unit
+        run: ../../../vendor/bin/phpunit --testdox --testsuite unit
