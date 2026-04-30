@@ -33,23 +33,15 @@ jobs:
   phpunit:
     needs: version-matrix
     name: 'PHP ${{ matrix.phpVersion }} | Shopware ${{ matrix.shopwareVersion }}'
-    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         phpVersion: ['8.3', '8.4']
         shopwareVersion: ${{ fromJson(needs.version-matrix.outputs.shopwareVersions) }}
-
-    steps:
-      - name: 'Checkout Code'
-        uses: actions/checkout@v6
-
-      - name: 'Run PHPUnit'
-        uses: ./.github/action/phpunit
-        with:
-          extension-name: ${{ github.event.repository.name }}
-          shopware-github-token: ${{ secrets.GITHUB_TOKEN }}
-          php-version: ${{ matrix.phpVersion }}
-          shopware-version: ${{ matrix.shopwareVersion }}
-          install: 'true'
-          allow-insecure-versions: 'true'
+    uses: ./.github/workflows/action-phpunit.yml
+    with:
+      extension-name: ${{ github.event.repository.name }}
+      php-version: ${{ matrix.phpVersion }}
+      shopware-version: ${{ matrix.shopwareVersion }}
+      install: 'true'
+      allow-insecure-versions: 'true'

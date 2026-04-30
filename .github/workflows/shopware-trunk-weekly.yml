@@ -39,17 +39,9 @@ jobs:
 
   phpunit:
     name: 'PHPUnit'
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: 'Checkout Code'
-        uses: actions/checkout@v6
-
-      - name: 'Run PHPUnit'
-        uses: ./.github/action/phpunit
-        with:
-          extension-name: ${{ github.event.repository.name }}
-          shopware-github-token: ${{ secrets.GITHUB_TOKEN }}
-          php-version: '8.4'
-          shopware-version: 'trunk'
-          install: 'false'
+    uses: ./.github/workflows/action-phpunit.yml
+    with:
+      extension-name: ${{ github.event.repository.name }}
+      php-version: '8.4'
+      shopware-version: 'trunk'
+      install: 'false'
