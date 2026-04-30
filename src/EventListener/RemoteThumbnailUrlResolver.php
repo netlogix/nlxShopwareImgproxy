@@ -12,6 +12,7 @@ namespace Netlogix\NlxSwImgproxy\EventListener;
 
 use Netlogix\NlxSwImgproxy\Service\ConfigService;
 use Netlogix\NlxSwImgproxy\Service\UrlGeneratorInterface;
+use Netlogix\NlxSwImgproxy\Test\Helper\ShopwareVersionHelper;
 use Shopware\Core\Content\Media\Extension\ResolveRemoteThumbnailUrlExtension;
 use Shopware\Core\Framework\Feature;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
@@ -47,11 +48,19 @@ class RemoteThumbnailUrlResolver
             }
         }
 
-        $extension->result = $this->urlGenerator->generateUrl(
-            imagePath: $extension->mediaPath,
-            width: $extension->width,
-            height: $extension->height,
-            imageDate: $extension->mediaEntity->getUpdatedAt() ?? $extension->mediaEntity->getCreatedAt() ?? null
-        );
+        if (version_compare(ShopwareVersionHelper::getShopwareVersion(), 'v6.7.3.0', '>=')) {
+            $extension->result = $this->urlGenerator->generateUrl(
+                imagePath: $extension->mediaPath,
+                width: $extension->width,
+                height: $extension->height,
+                imageDate: $extension->mediaEntity->getUpdatedAt() ?? $extension->mediaEntity->getCreatedAt() ?? null
+            );
+        } else {
+            $extension->result = $this->urlGenerator->generateUrl(
+                imagePath: $extension->mediaPath,
+                width: $extension->width,
+                height: $extension->height,
+            );
+        }
     }
 }
