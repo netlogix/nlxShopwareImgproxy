@@ -33,44 +33,15 @@ jobs:
   phpunit:
     needs: version-matrix
     name: 'PHP ${{ matrix.phpVersion }} | Shopware ${{ matrix.shopwareVersion }}'
-    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         phpVersion: ['8.3', '8.4']
         shopwareVersion: ${{ fromJson(needs.version-matrix.outputs.shopwareVersions) }}
-
-    steps:
-      - name: 'Checkout Code'
-        uses: actions/checkout@v6
-        with:
-          path: custom/plugins/${{ github.event.repository.name }}
-
-      - name: 'Setup Shopware and Extension'
-        uses: shopware/github-actions/setup-extension@main
-        with:
-          extensionName: ${{ github.event.repository.name }}
-          shopware-github-token: ${{ secrets.GITHUB_TOKEN }}
-          phpVersion: ${{ matrix.phpVersion }}
-          shopwareVersion: ${{ matrix.shopwareVersion }}
-          node-version: 22
-          skip-js-build: true
-          install: true
-          env: test
-          keep-composer-tools: true
-          allow-insecure-versions: true
-
-      - name: 'Validate composer.json and composer.lock'
-        working-directory: custom/plugins/${{ github.event.repository.name }}
-        shell: bash
-        run: composer validate
-
-      - name: 'composer install'
-        working-directory: custom/plugins/${{ github.event.repository.name }}
-        shell: bash
-        run: composer install --no-interaction --no-progress --no-ansi --no-interaction
-
-      - name: 'Run Unit Tests'
-        working-directory: custom/plugins/${{ github.event.repository.name }}
-        shell: bash
-        run: vendor/bin/phpunit --testdox --testsuite unit
+    uses: ./.github/workflows/action-phpunit.yml
+    with:
+      extension-name: ${{ github.event.repository.name }}
+      php-version: ${{ matrix.phpVersion }}
+      shopware-version: ${{ matrix.shopwareVersion }}
+      install: 'true'
+      allow-insecure-versions: 'true'
