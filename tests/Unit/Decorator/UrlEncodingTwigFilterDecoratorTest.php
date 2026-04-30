@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Netlogix\NlxSwImgproxy\Test\Unit\Decorator;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use Netlogix\NlxSwImgproxy\Decorator\UrlEncodingTwigFilterDecorator;
 use Netlogix\NlxSwImgproxy\Service\ConfigService;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -17,6 +18,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(UrlEncodingTwigFilterDecorator::class)]
+#[AllowMockObjectsWithoutExpectations]
 class UrlEncodingTwigFilterDecoratorTest extends TestCase
 {
     private MockObject $configService;

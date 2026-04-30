@@ -10,6 +10,9 @@ declare(strict_types=1);
 
 namespace Netlogix\NlxSwImgproxy\Tests\Unit\Service;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use DateTimeImmutable;
+use DateTimeInterface;
 use Netlogix\NlxSwImgproxy\Enum\ResizeType;
 use Netlogix\NlxSwImgproxy\Model\Image;
 use Netlogix\NlxSwImgproxy\Service\ConfigService;
@@ -22,6 +25,7 @@ use PHPUnit\Framework\TestCase;
 
 #[CoversClass(UrlGenerator::class)]
 #[UsesClass(Image::class)]
+#[AllowMockObjectsWithoutExpectations]
 class UrlGeneratorTest extends TestCase
 {
     private UrlGenerator $subject;
@@ -73,7 +77,7 @@ class UrlGeneratorTest extends TestCase
             'baseUrl' => 'https://image-proxy.example.com',
             'resizeType' => null,
             'cacheBusterEnabled' => true,
-            'imageDate' => new \DateTimeImmutable('2023-01-01 00:00:00'),
+            'imageDate' => new DateTimeImmutable('2023-01-01 00:00:00'),
         ];
 
         yield 'with cacheBuster disabled' => [
@@ -86,7 +90,7 @@ class UrlGeneratorTest extends TestCase
             'baseUrl' => 'https://image-proxy.example.com',
             'resizeType' => null,
             'cacheBusterEnabled' => false,
-            'imageDate' => new \DateTimeImmutable('2023-01-01 00:00:00'),
+            'imageDate' => new DateTimeImmutable('2023-01-01 00:00:00'),
         ];
 
         yield 'with cacheBuster enabled but no imageDate' => [
@@ -112,7 +116,7 @@ class UrlGeneratorTest extends TestCase
             'baseUrl' => 'https://image-proxy.example.com',
             'resizeType' => null,
             'cacheBusterEnabled' => true,
-            'imageDate' => new \DateTimeImmutable('2023-01-01 00:00:00'),
+            'imageDate' => new DateTimeImmutable('2023-01-01 00:00:00'),
         ];
     }
 
@@ -127,7 +131,7 @@ class UrlGeneratorTest extends TestCase
         string $baseUrl = 'https://image-proxy.example.com',
         ?ResizeType $resizeType = null,
         bool $cacheBusterEnabled = false,
-        ?\DateTimeInterface $imageDate = null
+        ?DateTimeInterface $imageDate = null
     ): void {
         $this->configService->expects(self::atLeastOnce())
             ->method('getBaseUrl')

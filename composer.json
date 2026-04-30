@@ -18,8 +18,8 @@
         "netlogix/coding-guidelines-php": "^1.0",
         "phpunit/phpunit": "^12.0",
         "rector/rector": "^2.1",
-        "shopwarelabs/phpstan-shopware": "^0.1.14",
-        "shopware/storefront": "*"
+        "shopware/storefront": "*",
+        "shopwarelabs/phpstan-shopware": "^0.1.14"
     },
     "autoload": {
         "psr-4": {
@@ -41,23 +41,23 @@
         }
     },
     "extra": {
-        "label": {
-            "de-DE": "imgproxy Unterstützung",
-            "en-GB": "imgproxy support"
-        },
         "description": {
             "de-DE": "Dieses Plugin fügt Shopware Support für ImgProxy hinzu. Damit ermöglicht es schnelle serverseitige Resize- und Crop-Transformationen, WebP/AVIF-Ausgabe und signierte Urls.",
             "en-GB": "This plugin adds ImgProxy support to Shopware. It enables fast server-side resize and crop transformations, WebP/AVIF output, signed URLs, and reduced storage"
+        },
+        "label": {
+            "de-DE": "imgproxy Unterstützung",
+            "en-GB": "imgproxy support"
         },
         "manufacturerLink": {
             "de-DE": "https://www.netlogix.de",
             "en-GB": "https://www.netlogix.de"
         },
+        "shopware-plugin-class": "Netlogix\\NlxSwImgproxy\\NlxSwImgproxy",
         "supportLink": {
             "de-DE": "https://www.netlogix.de",
             "en-GB": "https://www.netlogix.de"
-        },
-        "shopware-plugin-class": "Netlogix\\NlxSwImgproxy\\NlxSwImgproxy"
+        }
     },
     "scripts": {
         "composer:normalize": "@composer normalize --no-check-lock --dry-run",
