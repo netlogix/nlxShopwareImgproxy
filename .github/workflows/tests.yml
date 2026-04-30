@@ -59,6 +59,14 @@ jobs:
           env: test
           keep-composer-tools: true
           allow-insecure-versions: true
+          extraRepositories: |
+            {
+              "${{ github.event.repository.name }}": {
+                "type": "path",
+                "url": "custom/plugins/${{ github.event.repository.name }}",
+                "symlink": true
+              }
+            }
 
       - name: 'Validate composer.json and composer.lock'
         working-directory: custom/plugins/${{ github.event.repository.name }}

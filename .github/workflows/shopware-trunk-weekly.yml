@@ -56,6 +56,14 @@ jobs:
           install: false
           env: test
           keep-composer-tools: true
+          extraRepositories: |
+            {
+              "${{ github.event.repository.name }}": {
+                "type": "path",
+                "url": "custom/plugins/${{ github.event.repository.name }}",
+                "symlink": true
+              }
+            }
 
       - name: 'Run Unit Tests'
         working-directory: custom/plugins/${{ github.event.repository.name }}
