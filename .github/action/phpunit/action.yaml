@@ -1,0 +1,36 @@
+name: 'PHPUnit'
+description: 'Setup Shopware with this extension and run the plugin unit test suite'
+
+inputs:
+  extension-name:
+    description: 'Shopware extension directory and plugin name'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: 'Validate composer.json and composer.lock'
+      working-directory: custom/plugins/${{ inputs.extension-name }}
+      shell: bash
+      run: composer validate
+
+    - name: 'Read PHPUnit version constraint'
+      id: phpunit-version
+      working-directory: custom/plugins/${{ inputs.extension-name }}
+      shell: bash
+      run: |
+        constraint=$(jq -r '.["require-dev"]["phpunit/phpunit"] // empty' composer.json)
+        if [ -z "$constraint" ]; then
+          echo 'Missing require-dev constraint for phpunit/phpunit in composer.json'
+          exit 1
+        fi
+        echo "constraint=$constraint" >> "$GITHUB_OUTPUT"
+
+    - name: 'Require PHPUnit'
+      shell: bash
+      run: composer require --dev "phpunit/phpunit:${{ steps.phpunit-version.outputs.constraint }}" --with-dependencies
+
+    - name: 'Run Unit Tests'
+      working-directory: custom/plugins/${{ inputs.extension-name }}
+      shell: bash
+      run: ../../../vendor/bin/phpunit --testdox --testsuite unit
