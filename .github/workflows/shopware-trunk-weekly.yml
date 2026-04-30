@@ -44,28 +44,12 @@ jobs:
     steps:
       - name: 'Checkout Code'
         uses: actions/checkout@v6
-        with:
-          path: custom/plugins/${{ github.event.repository.name }}
-
-      - name: 'Setup Shopware and Extension'
-        uses: shopware/github-actions/setup-extension@main
-        with:
-          extensionName: ${{ github.event.repository.name }}
-          phpVersion: '8.4'
-          shopwareVersion: 'trunk'
-          install: false
-          env: test
-          keep-composer-tools: true
-          extraRepositories: |
-            {
-              "${{ github.event.repository.name }}": {
-                "type": "path",
-                "url": "custom/plugins/${{ github.event.repository.name }}",
-                "symlink": true
-              }
-            }
 
       - name: 'Run PHPUnit'
         uses: ./.github/action/phpunit
         with:
           extension-name: ${{ github.event.repository.name }}
+          shopware-github-token: ${{ secrets.GITHUB_TOKEN }}
+          php-version: '8.4'
+          shopware-version: 'trunk'
+          install: 'false'

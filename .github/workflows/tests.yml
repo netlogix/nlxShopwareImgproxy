@@ -43,32 +43,13 @@ jobs:
     steps:
       - name: 'Checkout Code'
         uses: actions/checkout@v6
-        with:
-          path: custom/plugins/${{ github.event.repository.name }}
-
-      - name: 'Setup Shopware and Extension'
-        uses: shopware/github-actions/setup-extension@main
-        with:
-          extensionName: ${{ github.event.repository.name }}
-          shopware-github-token: ${{ secrets.GITHUB_TOKEN }}
-          phpVersion: ${{ matrix.phpVersion }}
-          shopwareVersion: ${{ matrix.shopwareVersion }}
-          node-version: 22
-          skip-js-build: true
-          install: true
-          env: test
-          keep-composer-tools: true
-          allow-insecure-versions: true
-          extraRepositories: |
-            {
-              "${{ github.event.repository.name }}": {
-                "type": "path",
-                "url": "custom/plugins/${{ github.event.repository.name }}",
-                "symlink": true
-              }
-            }
 
       - name: 'Run PHPUnit'
         uses: ./.github/action/phpunit
         with:
           extension-name: ${{ github.event.repository.name }}
+          shopware-github-token: ${{ secrets.GITHUB_TOKEN }}
+          php-version: ${{ matrix.phpVersion }}
+          shopware-version: ${{ matrix.shopwareVersion }}
+          install: 'true'
+          allow-insecure-versions: 'true'

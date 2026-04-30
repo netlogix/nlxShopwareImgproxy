@@ -5,12 +5,48 @@ inputs:
   extension-name:
     description: 'Shopware extension directory and plugin name'
     required: true
+  shopware-github-token:
+    description: 'Token used for checking out Shopware'
+    required: true
+  php-version:
+    description: 'PHP version used by the Shopware setup action'
+    required: true
+  shopware-version:
+    description: 'Shopware version used by the Shopware setup action'
+    required: true
+  install:
+    description: 'Whether the Shopware setup action should install Shopware and activate the plugin'
+    required: false
+    default: 'true'
+  allow-insecure-versions:
+    description: 'Whether the Shopware setup action should allow insecure Shopware versions'
+    required: false
+    default: 'false'
 
 runs:
   using: 'composite'
   steps:
-    - name: 'Checkout Code'
-      uses: actions/checkout@v6
+    - name: 'Setup Shopware and Extension'
+      uses: shopware/github-actions/setup-extension@main
+      with:
+        extensionName: ${{ inputs.extension-name }}
+        shopware-github-token: ${{ inputs.shopware-github-token }}
+        phpVersion: ${{ inputs.php-version }}
+        shopwareVersion: ${{ inputs.shopware-version }}
+        node-version: 22
+        skip-js-build: true
+        install: ${{ inputs.install }}
+        env: test
+        keep-composer-tools: true
+        allow-insecure-versions: ${{ inputs.allow-insecure-versions }}
+        extraRepositories: |
+          {
+            "${{ inputs.extension-name }}": {
+              "type": "path",
+              "url": "custom/plugins/${{ inputs.extension-name }}",
+              "symlink": true
+            }
+          }
 
     - name: 'Validate composer.json and composer.lock'
       working-directory: custom/plugins/${{ inputs.extension-name }}
