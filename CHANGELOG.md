@@ -1,3 +1,16 @@
+# [1.7.0](https://github.com/netlogix/nlxShopwareImgproxy/compare/v1.6.0...v1.7.0) (2026-04-30)
+
+
+### Bug Fixes
+
+* test workflow ([bd63851](https://github.com/netlogix/nlxShopwareImgproxy/commit/bd638518f97b22b3130ad7223e58c2ebd35148f0))
+
+
+### Features
+
+* add imgproxy cache buster ([c00b324](https://github.com/netlogix/nlxShopwareImgproxy/commit/c00b324df601aa9b0152a76c7b1f701787f2bf79))
+* add imgproxy cache buster ([#40](https://github.com/netlogix/nlxShopwareImgproxy/issues/40)) ([f03255e](https://github.com/netlogix/nlxShopwareImgproxy/commit/f03255ec71245e31fed6675ce2163f7e58386a52))
+
 # [1.6.0](https://github.com/netlogix/nlxShopwareImgproxy/compare/v1.5.0...v1.6.0) (2026-04-16)
 
 ## [1.0.5](https://github.com/netlogix/nlxShopwareImgproxy/compare/v1.0.4...v1.0.5) (2026-04-14)
