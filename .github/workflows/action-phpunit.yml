@@ -1,0 +1,81 @@
+name: Reusable PHPUnit
+
+on:
+  workflow_call:
+    inputs:
+      extension-name:
+        description: 'Shopware extension directory and plugin name'
+        required: true
+        type: string
+      php-version:
+        description: 'PHP version used by the Shopware setup action'
+        required: true
+        type: string
+      shopware-version:
+        description: 'Shopware version used by the Shopware setup action'
+        required: true
+        type: string
+      install:
+        description: 'Whether the Shopware setup action should install Shopware and activate the plugin'
+        required: false
+        type: string
+        default: 'true'
+      allow-insecure-versions:
+        description: 'Whether the Shopware setup action should allow insecure Shopware versions'
+        required: false
+        type: string
+        default: 'false'
+
+jobs:
+  phpunit:
+    name: PHPUnit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 'Setup Shopware and Extension'
+        uses: shopware/github-actions/setup-extension@main
+        with:
+          extensionName: ${{ inputs.extension-name }}
+          shopware-github-token: ${{ github.token }}
+          phpVersion: ${{ inputs.php-version }}
+          shopwareVersion: ${{ inputs.shopware-version }}
+          node-version: 22
+          skip-js-build: true
+          install: ${{ inputs.install }}
+          env: test
+          keep-composer-tools: true
+          allow-insecure-versions: ${{ inputs.allow-insecure-versions }}
+          extraRepositories: |
+            {
+              "${{ inputs.extension-name }}": {
+                "type": "path",
+                "url": "custom/plugins/${{ inputs.extension-name }}",
+                "symlink": true
+              }
+            }
+
+      - name: 'Validate composer.json and composer.lock'
+        working-directory: custom/plugins/${{ inputs.extension-name }}
+        shell: bash
+        run: composer validate
+
+      - name: 'Read PHPUnit version constraint'
+        id: phpunit-version
+        working-directory: custom/plugins/${{ inputs.extension-name }}
+        shell: bash
+        run: |
+          constraint=$(jq -r '.["require-dev"]["phpunit/phpunit"] // empty' composer.json)
+          if [ -z "$constraint" ]; then
+            echo 'Missing require-dev constraint for phpunit/phpunit in composer.json'
+            exit 1
+          fi
+          echo "constraint=$constraint" >> "$GITHUB_OUTPUT"
+
+      - name: 'Require PHPUnit'
+        shell: bash
+        run: composer require --dev "phpunit/phpunit:${{ steps.phpunit-version.outputs.constraint }}" --with-dependencies
+
+      - name: 'Run Unit Tests'
+        working-directory: custom/plugins/${{ inputs.extension-name }}
+        shell: bash
+        run: ../../../vendor/bin/phpunit --testdox --testsuite unit

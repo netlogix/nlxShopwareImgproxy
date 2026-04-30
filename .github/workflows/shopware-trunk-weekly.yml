@@ -39,25 +39,9 @@ jobs:
 
   phpunit:
     name: 'PHPUnit'
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: 'Checkout Code'
-        uses: actions/checkout@v6
-        with:
-          path: custom/plugins/${{ github.event.repository.name }}
-
-      - name: 'Setup Shopware and Extension'
-        uses: shopware/github-actions/setup-extension@main
-        with:
-          extensionName: ${{ github.event.repository.name }}
-          phpVersion: '8.4'
-          shopwareVersion: 'trunk'
-          install: false
-          env: test
-          keep-composer-tools: true
-
-      - name: 'Run Unit Tests'
-        working-directory: custom/plugins/${{ github.event.repository.name }}
-        shell: bash
-        run: ../../../vendor/bin/phpunit --testdox --testsuite unit
+    uses: ./.github/workflows/action-phpunit.yml
+    with:
+      extension-name: ${{ github.event.repository.name }}
+      php-version: '8.4'
+      shopware-version: 'trunk'
+      install: 'true'

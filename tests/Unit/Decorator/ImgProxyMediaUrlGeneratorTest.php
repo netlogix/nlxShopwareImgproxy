@@ -43,7 +43,7 @@ class ImgProxyMediaUrlGeneratorTest extends TestCase
         $this->subject = new ImgProxyMediaUrlGenerator(
             $this->decorated,
             $this->urlGenerator,
-            $this->configService
+            $this->configService,
         );
 
         Feature::registerFeature('UrlParams_has_mimeType');
