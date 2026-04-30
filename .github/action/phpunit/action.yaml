@@ -9,6 +9,9 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    - name: 'Checkout Code'
+      uses: actions/checkout@v6
+
     - name: 'Validate composer.json and composer.lock'
       working-directory: custom/plugins/${{ inputs.extension-name }}
       shell: bash
