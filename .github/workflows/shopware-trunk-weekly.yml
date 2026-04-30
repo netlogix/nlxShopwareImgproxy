@@ -65,6 +65,10 @@ jobs:
               }
             }
 
+      - name: 'Require PHPUnit 12'
+        shell: bash
+        run: composer require --dev phpunit/phpunit:^12.0 --with-dependencies
+
       - name: 'Run Unit Tests'
         working-directory: custom/plugins/${{ github.event.repository.name }}
         shell: bash
