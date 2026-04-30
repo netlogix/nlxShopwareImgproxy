@@ -44,4 +44,4 @@ jobs:
       extension-name: ${{ github.event.repository.name }}
       php-version: '8.4'
       shopware-version: 'trunk'
-      install: 'false'
+      install: 'true'
