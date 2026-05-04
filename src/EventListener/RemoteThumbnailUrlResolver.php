@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 namespace Netlogix\NlxSwImgproxy\EventListener;
 
-use Composer\InstalledVersions;
 use Netlogix\NlxSwImgproxy\Service\ConfigService;
+use Netlogix\NlxSwImgproxy\Service\ShopwareVersionHelper;
 use Netlogix\NlxSwImgproxy\Service\UrlGeneratorInterface;
 use Shopware\Core\Content\Media\Extension\ResolveRemoteThumbnailUrlExtension;
 use Shopware\Core\Framework\Feature;
@@ -48,7 +48,7 @@ class RemoteThumbnailUrlResolver
             }
         }
 
-        if (version_compare(InstalledVersions::getPrettyVersion('shopware/core'), 'v6.7.3.0', '>=')) {
+        if (version_compare(ShopwareVersionHelper::getShopwareVersion(), 'v6.7.3.0', '>=')) {
             $extension->result = $this->urlGenerator->generateUrl(
                 imagePath: $extension->mediaPath,
                 width: $extension->width,

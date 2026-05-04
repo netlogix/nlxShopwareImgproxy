@@ -1,6 +1,13 @@
 <?php
+declare(strict_types=1);
 
-namespace Netlogix\NlxSwImgproxy\Test\Helper;
+/*
+ * Created by netlogix GmbH & Co. KG
+ *
+ * @copyright netlogix GmbH & Co. KG
+ */
+
+namespace Netlogix\NlxSwImgproxy\Service;
 
 use Composer\InstalledVersions;
 
