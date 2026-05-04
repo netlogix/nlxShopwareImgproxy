@@ -11,8 +11,8 @@ declare(strict_types=1);
 namespace Netlogix\NlxSwImgproxy\EventListener;
 
 use Netlogix\NlxSwImgproxy\Service\ConfigService;
+use Netlogix\NlxSwImgproxy\Service\ShopwareVersionHelper;
 use Netlogix\NlxSwImgproxy\Service\UrlGeneratorInterface;
-use Netlogix\NlxSwImgproxy\Test\Helper\ShopwareVersionHelper;
 use Shopware\Core\Content\Media\Extension\ResolveRemoteThumbnailUrlExtension;
 use Shopware\Core\Framework\Feature;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
