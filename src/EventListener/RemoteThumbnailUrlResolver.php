@@ -60,6 +60,7 @@ class RemoteThumbnailUrlResolver
                 imagePath: $extension->mediaPath,
                 width: $extension->width,
                 height: $extension->height,
+                imageDate: $extension->mediaUpdatedAt ?? null
             );
         }
     }
