@@ -12,8 +12,8 @@ namespace Netlogix\NlxSwImgproxy\Tests\Unit\EventListener;
 
 use Netlogix\NlxSwImgproxy\EventListener\RemoteThumbnailUrlResolver;
 use Netlogix\NlxSwImgproxy\Service\ConfigService;
+use Netlogix\NlxSwImgproxy\Service\ShopwareVersionHelper;
 use Netlogix\NlxSwImgproxy\Service\UrlGeneratorInterface;
-use Netlogix\NlxSwImgproxy\Test\Helper\ShopwareVersionHelper;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
