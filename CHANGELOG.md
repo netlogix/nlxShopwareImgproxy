@@ -1,3 +1,11 @@
+# [1.8.0](https://github.com/netlogix/nlxShopwareImgproxy/compare/v1.7.1...v1.8.0) (2026-05-04)
+
+
+### Features
+
+* use mediaUpdateAt before 6.7.3 for cachebuster ([fc3ae56](https://github.com/netlogix/nlxShopwareImgproxy/commit/fc3ae56a2c7deaa5c4db1897aacd5d3e4f596a1e))
+* use mediaUpdateAt before 6.7.3 for cachebuster ([#48](https://github.com/netlogix/nlxShopwareImgproxy/issues/48)) ([d936c28](https://github.com/netlogix/nlxShopwareImgproxy/commit/d936c281c4597a54018403ef58e26b628b39c765))
+
 ## [1.7.1](https://github.com/netlogix/nlxShopwareImgproxy/compare/v1.7.0...v1.7.1) (2026-05-04)
 
 # [1.7.0](https://github.com/netlogix/nlxShopwareImgproxy/compare/v1.6.0...v1.7.0) (2026-04-30)
