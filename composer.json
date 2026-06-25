@@ -16,7 +16,7 @@
     "require-dev": {
         "ergebnis/composer-normalize": "^2.47",
         "netlogix/coding-guidelines-php": "^1.0",
-        "phpunit/phpunit": "^12.0",
+        "phpunit/phpunit": "^11.0",
         "rector/rector": "^2.1",
         "shopware/storefront": "*",
         "shopwarelabs/phpstan-shopware": "^0.1.14"
