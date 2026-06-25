@@ -34,8 +34,8 @@
     "config": {
         "allow-plugins": {
             "ergebnis/composer-normalize": true,
-            "symfony/runtime": true,
-            "php-http/discovery": true
+            "php-http/discovery": true,
+            "symfony/runtime": true
         },
         "audit": {
             "block-insecure": false
