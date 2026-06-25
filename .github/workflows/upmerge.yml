@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      GH_TOKEN: ${{ secrets.GH_AUTOMATION_TOKEN }}
+      GH_TOKEN: ${{ github.token }}
 
     steps:
       - name: Checkout
