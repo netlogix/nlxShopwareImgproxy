@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
  */
 class ConfigService
 {
-    public const string CONFIG_DOMAIN = 'NlxSwImgproxy.config';
+    public const CONFIG_DOMAIN = 'NlxSwImgproxy.config';
 
     public function __construct(
         private readonly SystemConfigService $systemConfigService,
