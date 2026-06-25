@@ -36,7 +36,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        phpVersion: ['8.3', '8.4']
+        phpVersion: ['8.2', '8.3', '8.4']
         shopwareVersion: ${{ fromJson(needs.version-matrix.outputs.shopwareVersions) }}
     uses: ./.github/workflows/action-phpunit.yml
     with:
