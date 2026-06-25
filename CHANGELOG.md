@@ -1,3 +1,17 @@
+# [2.0.0](https://github.com/netlogix/nlxShopwareImgproxy/compare/v1.8.0...v2.0.0) (2026-06-25)
+
+
+### FEAT
+
+* Define shopware/core version ([b1e0ba2](https://github.com/netlogix/nlxShopwareImgproxy/commit/b1e0ba2e18159c0325a65f90ec8bd06c16c93691))
+* Define shopware/core version ([#50](https://github.com/netlogix/nlxShopwareImgproxy/issues/50)) ([819b3cd](https://github.com/netlogix/nlxShopwareImgproxy/commit/819b3cd25336d479837a521b38d9a15434ce5831))
+
+
+### BREAKING CHANGES
+
+* This is needed for shopware review
+* This is needed for shopware review
+
 # [1.8.0](https://github.com/netlogix/nlxShopwareImgproxy/compare/v1.7.1...v1.8.0) (2026-05-04)
 
 
