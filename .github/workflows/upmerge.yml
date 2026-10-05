@@ -5,18 +5,11 @@ on:
     branches:
       - develop
 
-permissions:
-  contents: write
-  packages: read
-
 jobs:
   upmerge:
-
     runs-on: ubuntu-latest
-
     env:
       GH_TOKEN: ${{ github.token }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@v7
