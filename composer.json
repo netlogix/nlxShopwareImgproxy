@@ -1,7 +1,7 @@
 {
     "name": "netlogix/nlx-sw-imgproxy",
     "description": "Plugin to allow shopware to authenticate and support image proxy",
-    "license": "MIT",
+    "license": "proprietary",
     "type": "shopware-platform-plugin",
     "version": "2.2.0",
     "authors": [
@@ -34,8 +34,8 @@
     "config": {
         "allow-plugins": {
             "ergebnis/composer-normalize": true,
-            "symfony/runtime": true,
-            "php-http/discovery": true
+            "php-http/discovery": true,
+            "symfony/runtime": true
         },
         "audit": {
             "block-insecure": false
